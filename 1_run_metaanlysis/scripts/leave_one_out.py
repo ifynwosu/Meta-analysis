@@ -17,12 +17,12 @@ from sklearn.model_selection import StratifiedKFold
 script_path = "/home/inwosu/Meta_Analysis"
 os.chdir(script_path)
 
-# number of genes
+# number of genes to use in cross validation
 n = 100
 
 # define methods
-kfold = StratifiedKFold(n_splits = 3) # test diff values 
 # kfold = KFold(n_splits = 3)
+kfold = StratifiedKFold(n_splits = 3) # test diff values 
 cv_method = kfold
 # cv_method = LeaveOneOut()
 
@@ -30,60 +30,60 @@ cv_method = kfold
 model = RandomForestClassifier(random_state = 1) # look at the default parameters
 
 # This first section determines the accuracy from list of significant genes identified by the metaanalysis
+
 # read in data 
-
-# meta_results = pd.read_table("/inwosu/Meta_Analysis/Data/meta_results/meta_results_without_E_TABM_158.tsv") 
-meta_results = pd.read_table("Data/meta_results/meta_results_without_GSE5847.tsv")  
-meta_results.columns = meta_results.columns.str.strip()
+# meta_results = pd.read_table("/inwosu/Meta_Analysis/Data/meta_results/meta_results_without_E_TABM_158.tsv", sep ='\t') 
+meta_results = pd.read_table("Data/meta_results/meta_results_without_GSE5847.tsv", sep ='\t')  
+# meta_results.columns = meta_results.columns.str.strip()
 gene_column = meta_results['Gene']
-# print(meta_results)
+print(gene_column)
 
-# top n genes
-gene_column = gene_column[:n]
-gene_column = gene_column.str.strip()
+# select top n genes
+# gene_column = gene_column[:n]
+# gene_column = gene_column.str.strip()
 
 # cross_val_df = pd.read_table("/inwosu/Meta_Analysis/Data/cross_validation_full/E_TABM_158.tsv")
-cross_val_df = pd.read_table("Data/cross_validation_full/GSE5847.tsv")
-cross_val_df.columns = cross_val_df.columns.str.strip()
+# cross_val_df = pd.read_table("Data/cross_validation_full/GSE5847.tsv")
+# cross_val_df.columns = cross_val_df.columns.str.strip()
 
 # split matrix
-X = cross_val_df[gene_column]
-y = cross_val_df['race'].str.strip().map({'Black':0, 'White':1})
+# X = cross_val_df[gene_column]
+# y = cross_val_df['race'].str.strip().map({'Black':0, 'White':1})
 # print(X)
 # print(y)
 
 # sys.exit()
 # evaluate model
-scores = cross_val_score(model, X, y, scoring = 'balanced_accuracy', cv = cv_method)
+# scores = cross_val_score(model, X, y, scoring = 'balanced_accuracy', cv = cv_method)
 
 # report performance
-print('Meta_genes Accuracy: %.3f (%.3f)' % (mean(scores), std(scores)))
+# print('Meta_genes Accuracy: %.3f (%.3f)' % (mean(scores), std(scores)))
 
 # accuracy_file = open("accuracy_file.txt", "w")
 
 # read in dataset  
-cross_val_df = pd.read_table("Data/cross_validation/E_TABM_158.tsv")
+# cross_val_df = pd.read_table("Data/cross_validation/E_TABM_158.tsv")
 # cross_val_df = pd.read_table("Data/cross_validation_full/E_TABM_158.tsv") 
-cross_val_df.columns = cross_val_df.columns.str.strip()
-cross_val_df['race'] = cross_val_df['race'].str.strip().map({'Black':0, 'White':1})
+# cross_val_df.columns = cross_val_df.columns.str.strip()
+# cross_val_df['race'] = cross_val_df['race'].str.strip().map({'Black':0, 'White':1})
 
-for i in range(10): 
+# for i in range(10): 
     
-    y = cross_val_df['race']
-    new_cross_df = cross_val_df.drop('race', axis = 1)
-    X = new_cross_df.sample(n = n, axis = 'columns', random_state = i)
+#     y = cross_val_df['race']
+#     new_cross_df = cross_val_df.drop('race', axis = 1)
+#     X = new_cross_df.sample(n = n, axis = 'columns', random_state = i)
 
-    # predict_df = pd.merge(race_col, random_df, how = "inner", left_index = True, right_index = True)
+#     # predict_df = pd.merge(race_col, random_df, how = "inner", left_index = True, right_index = True)
 
-    # X = predict_df.drop('race', axis = 1)
-    # y = predict_df['race']
+#     # X = predict_df.drop('race', axis = 1)
+#     # y = predict_df['race']
 
-    # # evaluate model
-    scores = cross_val_score(model, X, y, scoring = 'balanced_accuracy', cv = cv_method)
+#     # # evaluate model
+#     scores = cross_val_score(model, X, y, scoring = 'balanced_accuracy', cv = cv_method)
 
-    # # report performance
-    print('Accuracy: %.3f (%.3f)' % (mean(scores), std(scores)))
-    accuracy_value = ['Accuracy: %.3f (%.3f)' % (mean(scores), std(scores)), "\n"]
+#     # # report performance
+#     print('Accuracy: %.3f (%.3f)' % (mean(scores), std(scores)))
+#     accuracy_value = ['Accuracy: %.3f (%.3f)' % (mean(scores), std(scores)), "\n"]
     # accuracy_file.writelines(accuracy_value)
     
 # accuracy_file.close()

@@ -1,9 +1,8 @@
 
 # do we account for batch effects?
-# make sure genes match across all datasets
 
 # This is where we are going to save the results
-meta_results_dir <- "/inwosu/Meta_Analysis/Data/meta_results"
+meta_results_dir <- "/inwosu/Meta_Analysis/Data/race_meta_results"
 
 if (!dir.exists(meta_results_dir)) {
   dir.create(meta_results_dir, recursive = TRUE)
@@ -52,7 +51,6 @@ for (i in 1:ncol(combinations)) {
                   na.omit() |>
                   as.matrix()
     expr_list[[j]] <- expr_data
-    
   }
   
   list_all_metadata[[i]] <- meta_list
@@ -91,7 +89,6 @@ for (i in seq_along(list_all_exprdata)) {
   
 }
 
-# a <- meta_analysis_results[[i]] 
 
 # Draw heatmap
 # source("/inwosu/Meta_Analysis/1_run_metaanlysis/functions/draw_Heatmap.R")
@@ -106,8 +103,7 @@ for (i in seq_along(list_all_exprdata)) {
 #                                control = "White",
 #                                title = "Race")
 
-# sklearn leave one out cross validation
-# validation dataset, narrow the dataset down to the selected genes and save that file with those gene expression values and race to tsv file
+# This section is for meta analysis on the full race data sets.
 
 # for (i in seq_along(expr_dir_paths)) {
 #   metadata <- read_tsv(file = meta_dir_paths[i]) |>

@@ -1,13 +1,12 @@
 
-cross_validation_results_dir <- "/inwosu/Meta_Analysis/Data/cross_validation"
+cross_validation_results_dir <- "/inwosu/Meta_Analysis/Data/cross_validation_meta"
 
 if (!dir.exists(cross_validation_results_dir)) {
   dir.create(cross_validation_results_dir)
 }
 
-meta_dir <- "/inwosu/Meta_Analysis/Data/race_metadata"
-# meta_dir <- "/inwosu/Meta_Analysis/Data/meta_results"
-file_paths_meta <- list.files(meta_dir, full.names = T)
+metadata_dir <- "/inwosu/Meta_Analysis/Data/race_metadata"
+file_paths_meta <- list.files(metadata_dir, full.names = T)
 
 expr_dir <- "/inwosu/Meta_Analysis/Data/race_expression_data"
 file_paths_expr <- list.files(expr_dir, full.names = T)
@@ -20,17 +19,20 @@ for (i in 1:length(file_paths_meta)) {
   meta_file <- (file_paths_meta[i])
   meta_data <- read_tsv(meta_file)
   
-  identifiers <- meta_data %>%
-    select(Sample_ID, race) %>% as_tibble()
+  identifiers <- meta_data |>
+    select(Sample_ID, race) |> 
+    as_tibble()
   
-  filename <- meta_file %>% basename() %>% file_path_sans_ext()
+  filename <- meta_file |> 
+    basename() |> 
+    file_path_sans_ext()
   
   expr_file <- (file_paths_expr[i])
   expr_data <- read_tsv(expr_file) 
   
   result_file <- (file_paths_results[i])
   result_data <- read_tsv(result_file)
-  relevant_genes <- result_data %>%
+  relevant_genes <- result_data |>
     pull(Gene)
   
   transposed_data <- expr_data |> 
