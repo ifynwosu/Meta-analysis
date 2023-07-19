@@ -1,36 +1,43 @@
+# adapted from the bioconductor package "DExMA"
+# added more parameters to customize heatmap further
+
 draw_Heatmap <- function(objectMA, resMA,
-                        typeMethod=c("FEM", "REM", "maxP", "minP","Fisher", "Stouffer", "ACAT"),
-                        scaling=c("zscor","rscale","swr","none"),
-                        regulation=c("all", "up","down"),
-                        breaks=c(-2,2),
+                        typeMethod = c("FEM", "REM", "maxP", "minP","Fisher", "Stouffer", "ACAT"),
+                        scaling = c("zscor","rscale","swr","none"),
+                        regulation = c("all", "up","down"),
+                        breaks = c(-2,2),
                         fdrSig = 0.05,
-                        numSig = 50,
+                        numSig,
                         color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
-                        na_col = "darkgrey",
+                        na_col = "black",
                         legend = TRUE,
                         control,
                         case,
                         title)
 {
   typeMethod <- match.arg(typeMethod)
-  scaling<-match.arg(scaling)
-  regulation<-match.arg(regulation)
-  heatmap.var="none"
+  scaling <- match.arg(scaling)
+  regulation <- match.arg(regulation)
+  heatmap.var = "none"
+
   if(!is.null(breaks)){
-    bks=seq(breaks[1],breaks[2],length.out = 100)
-  }else{
-    bks=NULL
+    bks = seq(breaks[1],breaks[2],length.out = 100)
+  } else{
+    bks = NULL
   }
+
   ## Get features based on Meta-analysis results
   ## Case of Effects size
   if(typeMethod == "FEM" | typeMethod == "REM"){
     sig.genes <- .effectSig(resMA, regulation, numSig, fdrSig)
   }
+
   ## Case of P-value combination
   if(typeMethod == "Fisher" |typeMethod == "Stouffer" | typeMethod == "maxP" |
      typeMethod == "minP" | typeMethod == "ACAT"){
     sig.genes <- .pvalueSig(resMA, regulation, numSig, fdrSig)
   }
+
   ## Create a matrix with all datasets
   all.cl <- NULL
   all.colnames <- NULL
@@ -46,6 +53,7 @@ draw_Heatmap <- function(objectMA, resMA,
   exp.ALL <- matrix(data=NA, ncol=length(all.colnames),nrow=length(sig.genes))
   rownames(exp.ALL) <- sig.genes
   colnames(exp.ALL) <- all.colnames
+
   ## Scaling datasets
   switch(scaling,
          rscale={exp.ALL<- .rscale(objectMA, sig.genes, exp.ALL)
@@ -56,24 +64,22 @@ draw_Heatmap <- function(objectMA, resMA,
          swr={heatmap.var="row"
          exp.ALL<- .swr(objectMA, resMA, sig.genes, exp.ALL)}
   )
+
   ## Heatmap
   ann <- data.frame(variable = ifelse(all.cl == 0, control, case),
                     dataset=sizes, row.names=colnames(exp.ALL))
   if(numSig>60){show.rownames=FALSE}
   else{show.rownames=TRUE}
-  pheatmap::pheatmap(exp.ALL[,order(all.cl, decreasing=TRUE)], annotation_col = ann,
+  pheatmap(exp.ALL[,order(all.cl, decreasing=TRUE)], annotation_col = ann,
            cluster_cols=FALSE, cluster_rows=FALSE, scale=heatmap.var, breaks=bks,
            show_colnames=FALSE,show_rownames=show.rownames, na_col = na_col, 
            color = color, legend = legend, main = title)
   return(exp.ALL)
 }
 
-
-
 ################################################################################
 
-
-#Significant genes in Effects sizes results
+# Significant genes in Effects sizes results
 .effectSig <- function(resMA, regulation, numSig, fdrSig){
   if(regulation=="up"){resMA <- resMA[rownames(resMA)[resMA$Zval>0],]}
   if(regulation=="down"){resMA <- resMA[rownames(resMA)[resMA$Zval<0],]}
@@ -99,9 +105,10 @@ draw_Heatmap <- function(objectMA, resMA,
   ord <- resMA[sig.genes,]
   sig.genes <- sig.genes[order(ord$AveFC,decreasing = TRUE)]
 }
+
 ##############################################################################
 
-#rscale function
+# rscale function
 .rscale <- function(objectMA, sig.genes, exp.ALL){
   print("scaling using rescale function...")
   for(set in seq_len(length(objectMA))){
@@ -120,7 +127,7 @@ draw_Heatmap <- function(objectMA, resMA,
   return(exp.ALL)
 }
 
-#scaling zscor function
+# scaling zscor function
 .zscor <- function(objectMA, sig.genes, exp.ALL){
   print("scaling using z-score...")
   for(set in seq_len(length(objectMA))){
@@ -138,7 +145,7 @@ draw_Heatmap <- function(objectMA, resMA,
   return(exp.ALL)
 }
 
-#scaling with reference scaling function
+# scaling with reference scaling function
 .swr <- function(objectMA,resMA,sig.genes, exp.ALL){
   allgenes <- rownames(resMA)
   for (study in seq_len(length(objectMA))){
@@ -196,7 +203,7 @@ draw_Heatmap <- function(objectMA, resMA,
   return(exp.ALL)
 }
 
-#none scaling function
+# none scaling function
 .none <- function(objectMA, sig.genes, exp.ALL){
   for(set in seq_len(length(objectMA))){
     temp<-objectMA[[set]][[1]][intersect(

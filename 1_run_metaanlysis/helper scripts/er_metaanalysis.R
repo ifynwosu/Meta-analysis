@@ -40,12 +40,21 @@ heterogeneityTest(meta_object)
 
 resultsMA <- metaAnalysisDE(meta_object, typeMethod = "REM")
 
+new_results <- resultsMA %>%
+  filter(FDR < 0.001) %>%
+  arrange(desc(abs(Com.ES))) %>% 
+  head(n = 100)
+
+
+  
+  filter(abs(Com.ES) > 1)
+
 heatmap_values <- draw_Heatmap(objectMA = meta_object, 
             resMA = resultsMA,
             typeMethod = "REM",
             scaling = "zscor", 
             regulation = "all",
-            numSig = 50,
+            numSig = 500,
             na_col = "black",
             legend = T,
             case = "ER_positive",
@@ -54,4 +63,5 @@ heatmap_values <- draw_Heatmap(objectMA = meta_object,
 
 Top_genes = as.data.frame(rownames(heatmap_values))
 
-write_tsv(Top_genes, file.path("/inwosu/Meta_Analysis/Data/", "genes.tsv"))
+write_tsv(Top_genes, file.path("/inwosu/Meta_Analysis/Data/", "ER_genes.tsv"))
+
