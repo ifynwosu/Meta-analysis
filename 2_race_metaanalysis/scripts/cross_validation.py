@@ -1,8 +1,11 @@
-import os
+import os, sys
 
 # Data Processing
 import pandas as pd
 import numpy as np
+
+from numpy import mean
+from numpy import std
 
 # Modelling
 from sklearn.model_selection import train_test_split
@@ -21,7 +24,7 @@ from scipy.stats import randint
 script_path = "/inwosu/Meta_Analysis"
 os.chdir(script_path)
 
-df = pd.read_table("Data/cross_validation/GSE62944_Tumor.tsv") 
+df = pd.read_table("Data/cross_validation_race/GSE20194.tsv") 
 #feature selection
 
 df['race'] = df['race'].map({'Black':0,'White':1})
@@ -31,6 +34,9 @@ df['race'] = df['race'].map({'Black':0,'White':1})
 X = df.drop('race', axis=1)
 y = df['race']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.30)   #use leave one out
+
+print(X.shape)
+print(X_train.shape)
 
 # # creating a RF classifier
 rf = RandomForestClassifier(n_estimators = 100)
@@ -43,18 +49,20 @@ rf.fit(X_train, y_train)
 y_pred = rf.predict(X_test)
 y_pred_prob = rf.predict_proba(X_test)
 
-# print(y_pred)
+print(y_pred)
 # print(y_pred_prob)
 
-print(len(y_pred))
-print(len(y_pred_prob))
+# print(len(y_pred))
+# print(len(y_pred_prob))
+
+# sys.exit()
 # df['predicted_race'] = y_pred
 
 y_pred_df = pd.DataFrame(data = y_pred, columns = ['y_pred'], index = X_test.index.copy())
 df_out = pd.merge(y_pred_df, df, how = 'left', left_index = True, right_index = True)
-print(df_out.head)
+# print(df_out.head)
 
-
+    
 # # # metrics are used to find accuracy or error
 # from sklearn import metrics  
 # # print()

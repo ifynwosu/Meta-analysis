@@ -1,16 +1,14 @@
 
 # Define the file path to the metadata directory
-metadata_dir <- "/Data/renamed_metadata/"
+metadata_dir <- "/inwosu/Meta_Analysis/Data/analysis_ready_renamed_metadata/"
 
 # Create the metadata folder if it doesn't exist
 if (!dir.exists(metadata_dir)) {
   dir.create(metadata_dir, recursive = TRUE)
 }
 
-meta_dir <- "/Data/analysis_ready_metadata"
-#meta_dir <- "/inwosu/curated_data/Data/analysis_ready_metadata"
+meta_dir <- "/inwosu/Meta_Analysis/Data/analysis_ready_metadata"
 meta_dir_paths <- list.files(meta_dir, full.names = T)
-# a <- as.data.frame(meta_dir_paths)
 
 for (i in seq_along(meta_dir_paths)) {
   file = meta_dir_paths[i]

@@ -6,7 +6,7 @@ set -o errexit
 # Build the Docker image
 #######################################################
 
-docker build -t inwosu/metaanalysis_01 .
+docker build -t inwosu/metaanalysis_02 .
 
 #######################################################
 # Run docker command
@@ -14,10 +14,10 @@ docker build -t inwosu/metaanalysis_01 .
 
 dockerCommand="docker run -i -t --rm \
     -u $(id -u):$(id -g) \
-    -v $(pwd):/1_run_metaanalysis \
+    -v $(pwd):/2_race_metaanalysis \
     -v $(pwd)/../../curated_data/Data:/Data \
-    inwosu/metaanalysis_01"
+    inwosu/metaanalysis_02"
 
-time $dockerCommand Rscript scripts/run_metaanalysis.R
+time $dockerCommand Rscript scripts/run_race_metaanalysis.R
 
 # $dockerCommand bash

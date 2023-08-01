@@ -1,0 +1,375 @@
+Data/ER_meta_results/meta_results_without_GSE10810.tsv
+Data/cross_validation_ER/GSE10810.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.871 (0.141)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.386 (0.140)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.685 (0.204)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.721 (0.180)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.556 (0.306)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.950 (0.073)
+
+Data/ER_meta_results/meta_results_without_GSE21947.tsv
+Data/cross_validation_ER/GSE21947.tsv
+ESR1 CA12 GATA3 TBC1D9 NAT1 
+Meta genes accuracy: 0.667 (0.219)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.889 (0.122)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB2 
+Random genes accuracy: 0.600 (0.221)
+
+Random genes
+HIVEP1 RMI1 ELK4 LHX1 CRBN 
+Random genes accuracy: 0.778 (0.199)
+
+Random genes
+COX7C CBFA2T3 NNAT GSAP DDX50 
+Random genes accuracy: 0.733 (0.113)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.811 (0.171)
+
+Data/ER_meta_results/meta_results_without_GSE23720.tsv
+Data/cross_validation_ER/GSE23720.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.928 (0.065)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.643 (0.176)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.600 (0.083)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.626 (0.099)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.515 (0.103)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.655 (0.146)
+
+Data/ER_meta_results/meta_results_without_GSE20194.tsv
+Data/cross_validation_ER/GSE20194.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.954 (0.031)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.573 (0.136)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.566 (0.049)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.633 (0.084)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.690 (0.081)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.521 (0.050)
+
+Data/ER_meta_results/meta_results_without_E_TABM_158.tsv
+Data/cross_validation_ER/E_TABM_158.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.902 (0.067)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.747 (0.077)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.651 (0.058)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.562 (0.068)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.653 (0.048)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.677 (0.036)
+
+Data/ER_meta_results/meta_results_without_GSE20711.tsv
+Data/cross_validation_ER/GSE20711.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.833 (0.084)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.579 (0.079)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.511 (0.077)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.651 (0.137)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.665 (0.097)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.743 (0.124)
+
+Data/ER_meta_results/meta_results_without_GSE20271.tsv
+Data/cross_validation_ER/GSE20271.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.893 (0.045)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.540 (0.129)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.578 (0.130)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.732 (0.118)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.405 (0.134)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.533 (0.126)
+
+Data/ER_meta_results/meta_results_without_GSE21653.tsv
+Data/cross_validation_ER/GSE21653.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.949 (0.019)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.622 (0.035)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.519 (0.035)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.705 (0.081)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.585 (0.046)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.621 (0.042)
+
+Data/ER_meta_results/meta_results_without_GSE17907.tsv
+Data/cross_validation_ER/GSE17907.tsv
+ESR1 CA12 TBC1D9 GATA3 SLC39A6 
+Meta genes accuracy: 0.840 (0.178)
+
+Random genes
+NCKIPSD CCN6 CPZ RAB5C AZI2 
+Random genes accuracy: 0.680 (0.172)
+
+Random genes
+SNHG20 CCDC121 DEPTOR CELF2 BDKRB1 
+Random genes accuracy: 0.405 (0.208)
+
+Random genes
+HINT1 RMI1 ELK3 LHCGR CRBN 
+Random genes accuracy: 0.401 (0.138)
+
+Random genes
+COX7B RUNX1T1 NKX6-1 GSAP DDX50 
+Random genes accuracy: 0.555 (0.173)
+
+Random genes
+KRAS NF1 IL10RB RBM15B GNAQ 
+Random genes accuracy: 0.586 (0.096)
+
+Data/ER_meta_results/meta_results_without_GSE11001.tsv
+Data/cross_validation_ER/GSE11001.tsv
+ESR1 CA12 TBC1D9 GATA3 NAT1 
+Meta genes accuracy: 1.000 (0.000)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.300 (0.400)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB2 
+Random genes accuracy: 0.800 (0.245)
+
+Random genes
+HIVEP1 RMI1 ELK4 LHX1 CRBN 
+Random genes accuracy: 1.000 (0.000)
+
+Random genes
+COX7C CBFA2T3 NNAT GSAP DDX50 
+Random genes accuracy: 0.900 (0.200)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.650 (0.300)
+
+Data/ER_meta_results/meta_results_without_GSE22093.tsv
+Data/cross_validation_ER/GSE22093.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.795 (0.074)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.613 (0.105)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.468 (0.095)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.474 (0.170)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.523 (0.059)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.410 (0.083)
+
+Data/ER_meta_results/meta_results_without_GSE18864.tsv
+Data/cross_validation_ER/GSE18864.tsv
+ESR1 GATA3 CA12 TBC1D9 GFRA1 
+Meta genes accuracy: 1.000 (0.000)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.760 (0.095)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.657 (0.063)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.734 (0.191)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.760 (0.146)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.877 (0.063)
+
+Data/ER_meta_results/meta_results_without_GSE19615.tsv
+Data/cross_validation_ER/GSE19615.tsv
+ESR1 CA12 GATA3 TBC1D9 GFRA1 
+Meta genes accuracy: 0.981 (0.032)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: 0.782 (0.140)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB1 
+Random genes accuracy: 0.647 (0.111)
+
+Random genes
+HIVEP1 RMI1 ELK3 LHX1 CRBN 
+Random genes accuracy: 0.626 (0.112)
+
+Random genes
+COX7B RUNX1T1 NNAT GSAP DDX50 
+Random genes accuracy: 0.609 (0.133)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: 0.855 (0.112)
+
+Data/ER_meta_results/meta_results_without_GSE16446.tsv
+Data/cross_validation_ER/GSE16446.tsv
+GATA3 CA12 ESR1 TBC1D9 NAT1 
+Meta genes accuracy: nan (nan)
+
+Random genes
+NCKIPSD CCN5 COPS3 RAC1 AZI2 
+Random genes accuracy: nan (nan)
+
+Random genes
+SNHG20 CCDC121 DEPTOR LBX1 BDKRB2 
+Random genes accuracy: nan (nan)
+
+Random genes
+HIVEP1 RMI1 ELK4 LHX1 CRBN 
+Random genes accuracy: nan (nan)
+
+Random genes
+COX7C CBFA2T3 NNAT GSAP DDX50 
+Random genes accuracy: nan (nan)
+
+Random genes
+KRTAP5-9 NF2 IL11 RBM15B GNAS 
+Random genes accuracy: nan (nan)
+
+Data/ER_meta_results/meta_results_without_GSE18728.tsv
+Data/cross_validation_ER/GSE18728.tsv
+ESR1 CA12 GATA3 TBC1D9 SLC39A6 
+Meta genes accuracy: 0.851 (0.172)
+
+Random genes
+NCKIPSD CCN6 CPZ RAB5C AZI2 
+Random genes accuracy: 0.689 (0.172)
+
+Random genes
+SNHG20 CCDC121 DEPTOR CELF2 BDKRB1 
+Random genes accuracy: 0.863 (0.126)
+
+Random genes
+HINT1 RMI1 ELK3 LHCGR CRBN 
+Random genes accuracy: 0.699 (0.174)
+
+Random genes
+COX7B RUNX1T1 NKX6-1 GSAP DDX50 
+Random genes accuracy: 0.678 (0.181)
+
+Random genes
+KRAS NF1 IL10RB RBM15B GNAQ 
+Random genes accuracy: 0.577 (0.241)
+
