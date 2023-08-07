@@ -5,10 +5,10 @@ if (!dir.exists(cross_validation_results_dir)) {
   dir.create(cross_validation_results_dir)
 }
 
-metadata_dir <- "/inwosu/Meta_Analysis/Data/ER_metadata_new"
+metadata_dir <- "/inwosu/Meta_Analysis/Data/ER_metadata"
 file_paths_meta <- list.files(metadata_dir, full.names = T)
 
-expr_dir <- "/inwosu/Meta_Analysis/Data/ER_expression_data_new"
+expr_dir <- "/inwosu/Meta_Analysis/Data/ER_expression_data"
 file_paths_expr <- list.files(expr_dir, full.names = T)
 
 # results_dir <- "/inwosu/Meta_Analysis/Data/ER_meta_results"
@@ -75,12 +75,8 @@ for (i in 1:length(file_paths_meta)) {
   names(ER_status_tally)[i] <- filename
   
   write_tsv(joined_data, file.path(cross_validation_results_dir, paste0(filename, ".tsv")))
-  # print("Writing ", filename, " to file")
-  # stop("git here")
+
 }
-
-
-
 
 
 

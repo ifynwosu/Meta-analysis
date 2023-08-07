@@ -7,12 +7,12 @@ if (!dir.exists(PR_meta_results_dir)) {
 }
 
 # directory where metadata is stored
-meta_dir <- "/inwosu/Meta_Analysis/Data/pr_metadata"  
+meta_dir <- "/inwosu/Meta_Analysis/Data/PR_metadata"  
 meta_dir_paths <- list.files(meta_dir, full.names = T)
 meta_list <- list()
 
 # directory where expression data is stored
-expr_dir  <- "/inwosu/Meta_Analysis/Data/pr_expression_data"
+expr_dir  <- "/inwosu/Meta_Analysis/Data/PR_expression_data"
 expr_dir_paths <- list.files(expr_dir, full.names = T)
 expr_list <- list()
 
@@ -66,7 +66,7 @@ for (i in 1:ncol(combinations)) {
 }
 
 # vector with names of all data sets
-dataset_vector = str_replace_all(expr_dir_paths, c("/inwosu/Meta_Analysis/Data/pr_expression_data/" = "", ".tsv.gz" = ""))
+dataset_vector = str_replace_all(expr_dir_paths, c("/inwosu/Meta_Analysis/Data/PR_expression_data/" = "", ".tsv.gz" = ""))
 
 # meta_analysis_object <- list()
 # meta_analysis_results <- list()

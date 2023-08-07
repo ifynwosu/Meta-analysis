@@ -90,7 +90,7 @@ for (i in seq_along(list_all_exprdata)) {
     rownames_to_column("Gene")
   
   missing_dataset <- setdiff(dataset_vector, names(meta_object))
-  write_tsv(new_results, file.path(PR_meta_results_dir, paste0("meta_results_without_", missing_dataset, ".tsv")))
+  write_tsv(new_results, file.path(ER_meta_results_dir, paste0("meta_results_without_", missing_dataset, ".tsv")))
   
   # meta_analysis_object[[i]] <- meta_object
   # meta_analysis_results[[i]] <- new_results
