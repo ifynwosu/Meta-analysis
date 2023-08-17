@@ -1,4 +1,7 @@
 
+from datetime import datetime
+start = datetime.now()
+
 import os, sys
 
 # Data Processing
@@ -13,93 +16,128 @@ from sklearn.model_selection import LeaveOneOut
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import cross_val_predict
 
 # set directory
 script_path = "/home/inwosu/Meta_Analysis"
 os.chdir(script_path)
 
 # number of genes to use in cross validation
-n = 10
+num_genes = [5, 10, 50, 100, 500]
+
+# number of cross validation runs
+num_cv_runs = 100 
 
 # define methods
 kfold = StratifiedKFold(n_splits = 5) # test diff values 
 cv_method = kfold
+
+# some other options we may consider
 # kfold = KFold(n_splits = 3)
-# cv_method = LeaveOneOut()
+# (cv_method = LeaveOneOut()
 
 # create model
 model = RandomForestClassifier(n_estimators = 100, random_state = 1) # look at the default parameters
-# model = LogisticRegression(max_iter = 1000, random_state = 1)
 
 accuracy_file = open("accuracy_file_race.txt", "w")
+accuracy_file_results = open("accuracy_file_race_result.txt", "w")
 
 # define directories
 meta_results_dir = "Data/race_meta_results"
-cross_val_data_dir = "Data/cross_validation_meta"
+cross_val_data_dir = "Data/cross_validation_race"
 
-for filename in os.listdir(meta_results_dir):
+cv_mean_scores = []
+results_file = []
 
-    # This first section determines the accuracy from list of significant genes identified by the metaanalysis
-    # get file name
-    filename = filename.replace("meta_results_without_", "")
-    meta_path_name = os.path.join(meta_results_dir, "meta_results_without_" + filename)
-    
-    # read in data
-    meta_results = pd.read_table(meta_path_name, sep ='\t') 
-    gene = meta_results['Gene']
+for num in num_genes:
 
-    # select top "n" genes
-    gene = gene[:n]
-    
-    # read in data
-    cross_val_path_name = os.path.join(cross_val_data_dir, filename)    
-    print(cross_val_path_name)
-    cross_val_df = pd.read_table(cross_val_path_name, sep ='\t')
-    
-    # split matrix using only top "n" genes
-    X = cross_val_df[gene]
-    y = cross_val_df['race'].map({'Black':0, 'White':1})
+    # This outer loop determines the accuracy from list of significant genes identified by the metaanalysis
+    for filename in os.listdir(meta_results_dir):
 
-    # evaluate model
-    scores = cross_val_score(model, X, y, scoring = 'balanced_accuracy', cv = cv_method)
+        # get file name
+        dataset_id = filename.replace("meta_results_without_", "")
+        meta_path_name = os.path.join(meta_results_dir, "meta_results_without_" + dataset_id)
+        
+        # read in data
+        meta_results = pd.read_table(meta_path_name, sep ='\t') 
+        gene = meta_results['Gene']
 
-    # report performance   
-    print('Meta genes accuracy: %.3f (%.3f)' % (mean(scores), std(scores))) 
-    meta_accuracy_value = 'Meta genes accuracy: %.3f (%.3f)' % (mean(scores), std(scores))
+        # select top "n" genes
+        gene = gene[:num]
+        
+        # read in data
+        cross_val_path_name = os.path.join(cross_val_data_dir, dataset_id)  
+        cross_val_df = pd.read_table(cross_val_path_name, sep ='\t')
+        
+        # split matrix using only top "n" genes
+        X = cross_val_df[gene]
+        y = cross_val_df['race'].map({'Black':0, 'White':1})
 
-    accuracy_file.writelines(meta_path_name + "\n")
-    accuracy_file.writelines(cross_val_path_name + "\n")
-    accuracy_file.writelines(meta_accuracy_value + "\n" + "\n")
-
-# This second section determines the accuracy from a random list of genes in each dataset
-    for i in range(5):  
-    
-        genes_only = cross_val_df.drop('race', axis = 1)
-
-        # make sure thesse gene are not part of the meta analysis genes
-        new_df = genes_only.drop(columns = gene, axis = 1)
-
-        X_random = new_df.sample(n = n, axis = 'columns', random_state = i) # write selected genes to file        
-        y_random = cross_val_df['race']  
+        gene_names = X.keys()
 
         # evaluate model
-        random_scores = cross_val_score(model, X_random, y_random, scoring = 'balanced_accuracy', cv = cv_method)
+        scores = cross_val_score(model, X, y, scoring = 'balanced_accuracy', cv = cv_method)
+        meta_mean_score = scores.mean()
+        meta_std_dev = scores.std()
+        # new_scores = cross_val_predict(model, X, y, cv = cv_method, method = "predict_proba") 
 
-        #report performance
-        print('Random genes accuracy: %.3f (%.3f)' % (mean(random_scores), std(random_scores)))        
-        random_accuracy_value = 'accuracy: %.3f (%.3f)' % (mean(random_scores), std(random_scores))
+        # report performance   
+        meta_accuracy_value = 'Meta genes accuracy: %.3f (%.3f)' % (meta_mean_score, meta_std_dev)
 
-        gene_names = X_random.keys()
-        
-        accuracy_file.writelines("Random genes" + "\n")
+        #write results to file
+        # accuracy_file.writelines(dataset_id + "\t" + gene_names + "\t" + meta_accuracy_value + "\n")  
+        accuracy_file.writelines(meta_path_name + "\n")
+        accuracy_file.writelines(cross_val_path_name + "\n")
         accuracy_file.writelines(gene_names + " ")
-        accuracy_file.writelines("\n")
-        accuracy_file.writelines(random_accuracy_value + "\n")
-        print(X_random.keys())
-        # sys.exit()
-       
+        accuracy_file.writelines("\n" + meta_accuracy_value + "\n" + "\n")
 
+        # This inner loop performs cross-validation and gets mean scores from a random set of genes in each dataset 
+        mean_total_score = []
+        total_scores = []  
+        for i in range(num_cv_runs):  
+        
+            genes_only = cross_val_df.drop('race', axis = 1)
+
+            # make sure thesse gene are not part of the meta analysis genes
+            new_df = genes_only.drop(columns = gene, axis = 1)
+
+            # get random genes 
+            X_random = new_df.sample(n = num, axis = 'columns', random_state = i)     
+            y_random = cross_val_df['race']  
+
+            # evaluate model
+            random_scores = cross_val_score(model, X_random, y_random, scoring = 'balanced_accuracy', cv = cv_method)
+            random_mean_score = random_scores.mean()
+            random_std_dev = random_scores.std()
+            #cv_mean_scores.append(random_mean_score)
+            total_scores.append(random_mean_score)
+
+            #report performance
+            print('Random genes accuracy: %.3f (%.3f)' % (mean(random_scores), std(random_scores)))        
+            
+            random_gene_names = X_random.keys()            
+            random_accuracy_value = 'accuracy: %.3f (%.3f)' % (mean(random_scores), std(random_scores))
+            
+            accuracy_file.writelines("Random genes" + "\n")
+            accuracy_file.writelines(random_gene_names + " ")
+            accuracy_file.writelines("\n" + random_accuracy_value + "\n")
+            # accuracy_file.writelines(dataset_id + "\t" + gene_names + "\t" + meta_accuracy_value + "\t" + random_gene_names + "\t" + random_accuracy_value + "\t" + str(num) + "\n") 
+            
+            results_file.append({'Dataset_ID': dataset_id, 'num_genes': num, 'mean_score': random_mean_score})
+
+        mean_total_score.append(total_scores)
+        accuracy_file_results.writelines(dataset_id + "\t" + str(num) + "\t" + "Meta genes" + "\t" + str(meta_mean_score) + "\n")
+        accuracy_file_results.writelines(dataset_id + "\t" + str(num) + "\t" + "Random genes" + "\t" + str(mean(mean_total_score)) + "\n")  
+   
+    # Create a DataFrame to store the mean scores
+    results_df = pd.DataFrame(results_file)
+    results_df.to_csv("results_df.tsv", sep='\t', index = False)  
+       
 accuracy_file.close()
+accuracy_file_results.close()
+
+
+print(datetime.now()-start ) 
 
 
 

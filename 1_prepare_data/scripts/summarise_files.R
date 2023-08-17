@@ -1,7 +1,6 @@
 
 metadata_dir <- "/inwosu/curated_data/Data/analysis_ready_renamed_metadata"
 meta_dir_paths <- list.files(metadata_dir, full.names = T)
-#meta_dir_paths
 
 race_data <- tibble()
 er_data <- tibble()
@@ -39,30 +38,55 @@ for (i in seq_along(meta_dir_paths)) {
     sum_HER2 <- metadata %>% group_by(HER2_Status) %>% tally() %>% mutate(Dataset_ID = gseID) %>% relocate(Dataset_ID)
   }
   her2_data <- rbind(her2_data, sum_HER2)
-
-  # big_data <- rbind (big_data, sum_ER)
-  # new_data <- qpcR:::cbind.na(sum_ER, sum_PR, sum_HER2)
-  # big_data <- rbind (big_data, new_data)
 }
+
+filter_data <- function(dataset, col_names, col_values, paramA, paramB) {
+  dataset |>
+  pivot_wider(names_from = col_names, values_from = col_names) |>
+    mutate(proportion = (paramA/paramB)) |>
+    arrange(proportion) |>
+    mutate(across(proportion, round, 5)) |>
+    filter(between(proportion, 0.05, 20)) |>
+    filter(paramA >= 10, paramB >= 10)
+}
+
+big_race_data <- filter_data(race_data, race, n, Black, White)
 
 big_race_data <- race_data |>
   pivot_wider(names_from = race, values_from = n) |>
-  mutate(proportion = (Black/White))
+  mutate(proportion = (Black/White)) |>
+  arrange(proportion) |>
+  mutate(across(proportion, round, 5)) |>
+  filter(between(proportion, 0.05, 20)) |>
+  filter(Black >= 10, White >= 10) |>
+  filter(!Dataset_ID == "GSE62944_Normal")
 
 big_ER_data <- er_data |>
   pivot_wider(names_from = ER_Status, values_from = n) |>
   mutate(proportion = (negative/positive)) |>
-  filter(between(proportion, 0.4, 1.7))
+  arrange(proportion) |>
+  mutate(across(proportion, round, 5)) |>
+  filter(between(proportion, 0.05, 20)) |>
+  filter(negative >= 10, positive >= 10) |>
+  filter(!Dataset_ID == "GSE62944_Normal")
 
 big_PR_data <- pr_data %>% 
   pivot_wider(names_from = PR_Status, values_from = n) |>
   mutate(proportion = (negative/positive)) |>
-  filter(between(proportion, 0.1, 5.5))
+  arrange(proportion) |>
+  mutate(across(proportion, round, 5)) |>
+  filter(between(proportion, 0.05, 20)) |>
+  filter(negative >= 10, positive >= 10) |>
+  filter(!Dataset_ID == "GSE62944_Normal")
 
 big_HER2_data <- her2_data %>% 
   pivot_wider(names_from = HER2_Status, values_from = n) |>
   mutate(proportion = (negative/positive)) |>
-  filter(between(proportion, 0.4, 1.7))
+  arrange(proportion) |>
+  mutate(across(proportion, round, 5)) |>
+  filter(between(proportion, 0.05, 20)) |>
+  filter(negative >= 10, positive >= 10) |>
+  filter(!Dataset_ID == "GSE62944_Normal")
 
 # write_tsv(big_race_data, file.path("/inwosu/Meta_Analysis/Data/", "race_data.tsv"))
 # write_tsv(big_ER_data, file.path("/inwosu/Meta_Analysis/Data/", "ER_data.tsv"))
@@ -72,18 +96,32 @@ big_HER2_data <- her2_data %>%
 
 # code to copy select files to folder for analysis
 # use this for metadata
-big_PR_data$Dataset_ID <- paste0(big_PR_data$Dataset_ID, ".tsv")
+big_race_data$Dataset_ID <- paste0(big_race_data$Dataset_ID, ".tsv")
+
+# save dataset id to vector
+names_file <- big_race_data$Dataset_ID |> tibble()
+
+old_dir <- "/inwosu/curated_data/Data/analysis_ready_renamed_metadata/"
+new_dir <- "/inwosu/Meta_Analysis/Data/race_metadata/" 
+
+#old_dir <- "/inwosu/Meta_Analysis/Data/" 
+setwd(old_dir)
+for(i in names_file) {
+  file.copy(i, new_dir)
+}
 
 # use this for expression data
-big_PR_data$Dataset_ID <- paste0(big_PR_data$Dataset_ID, ".tsv.gz")
+big_race_data$Dataset_ID <- paste0(big_race_data$Dataset_ID, ".gz")
 
 # save data set id to vector
-names_file <- big_PR_data$Dataset_ID |> tibble()
+names_file <- big_race_data$Dataset_ID |> tibble()
 
-old_dir <- "/inwosu/curated_data/Data/analysis_ready_renamed_metadata"
-new_dir <- "/inwosu/Meta_Analysis/Data/PR_metadata"
+old_dir <- "/inwosu/curated_data/Data/analysis_ready_expression_data/"
+new_dir <- "/inwosu/Meta_Analysis/Data/race_expression_data/"
 
 setwd(old_dir)
 for(i in names_file) {
   file.copy(i, new_dir)
-  }
+}
+
+#check data labels from beginning to the predicted data (GEO to predicted df)

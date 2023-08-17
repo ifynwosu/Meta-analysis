@@ -32,7 +32,7 @@ for (i in 1:length(file_paths_meta)) {
   meta_data <- read_tsv(meta_file)
   
   identifiers <- meta_data |>
-    select(Sample_ID, race) |> 
+    dplyr::select(Sample_ID, race) |> 
     as_tibble()
   
   filename <- meta_file |> 
@@ -57,10 +57,10 @@ for (i in 1:length(file_paths_meta)) {
   
   renamed_data <- row_to_names(transposed_data, 1, remove_row = TRUE, remove_rows_above = TRUE) |>
     rename(Sample_ID = HGNC_Symbol) |>
-    select(Sample_ID, all_of(common_genes))
+    dplyr::select(Sample_ID, all_of(common_genes))
   
   joined_data <- inner_join(identifiers, renamed_data) |>
-    select(- Sample_ID) |>
+    dplyr::select(- Sample_ID) |>
     filter(race %in% c("Black", "White")) |>
     filter(!is.na(race)) |>
     mutate(across(where(is.numeric), scale))

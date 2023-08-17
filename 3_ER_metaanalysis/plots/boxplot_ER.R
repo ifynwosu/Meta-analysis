@@ -10,15 +10,18 @@ new_file <- accuracy_file |>
 meta_unique <- unique(accuracy_file$meta_accuracy) |> tibble()
 
 results_df <- read_tsv("/inwosu/Meta_Analysis/accuracy_file_ER_result.txt", col_names = F) 
-names(results_df) <- c("Dataset_ID", "num_genes", "filtering_type", "accuracy_score") 
+names(results_df) <- c("Dataset_ID", "num_genes", "gene_predictor", "accuracy score") 
 
 
 results_df %>%
-  ggplot(aes(x = factor(num_genes), y = accuracy_score, fill = factor(filtering_type))) +
+  ggplot(aes(x = factor(num_genes), y = `accuracy score`, fill = factor(gene_predictor))) +
   geom_jitter(color = "black", size = 0.3, alpha = 0.4) +
-  geom_boxplot(alpha = 0.5) + 
-  facet_wrap(~filtering_type) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) + 
+  facet_wrap(~gene_predictor) +
+  guides(fill = "none", ) +
   xlab("number of genes used in prediction")
+
+ggsave("ER_plot.pdf")
 
 
 
