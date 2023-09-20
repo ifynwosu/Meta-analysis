@@ -94,6 +94,7 @@ for num in num_genes:
         # This inner loop performs cross-validation and gets mean scores from a random set of genes in each dataset 
         mean_total_score = []
         total_scores = []  
+        
         for i in range(num_cv_runs):  
         
             genes_only = cross_val_df.drop('race', axis = 1)

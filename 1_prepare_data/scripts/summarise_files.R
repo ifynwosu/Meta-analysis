@@ -1,5 +1,5 @@
 
-metadata_dir <- "/inwosu/curated_data/Data/analysis_ready_renamed_metadata"
+metadata_dir <- "/inwosu/curated_data/Old_Data/analysis_ready_renamed_metadata"
 meta_dir_paths <- list.files(metadata_dir, full.names = T)
 
 race_data <- tibble()

@@ -18,6 +18,18 @@ expr_dir  <- "/inwosu/Meta_Analysis/Data/race_expression_data"
 expr_dir_paths <- list.files(expr_dir, full.names = T)
 expr_list <- list()
 
+# get common genes
+name_list <- list()
+
+for (i in 1:length(expr_dir_paths)) {
+  expr_file <- (expr_dir_paths[i])
+  expr_data <- read_tsv(expr_file) 
+  name_list[[i]] <- expr_data$HGNC_Symbol
+}
+
+common_genes <- tibble(Reduce(intersect, name_list))
+names(common_genes) <- "HGNC_Symbol"
+
 # Define a vector to save combinations for use in generating meta-analysis list
 my_vector <- c(length(meta_dir_paths)) 
 
@@ -32,18 +44,6 @@ phenoControls = rep(list("White"), length(combinations[,1]))
 # create vectors to store values
 list_all_metadata <- list()
 list_all_exprdata <- list()
-
-# get common genes
-name_list <- list()
-
-for (i in 1:length(expr_dir_paths)) {
-  expr_file <- (expr_dir_paths[i])
-  expr_data <- read_tsv(expr_file) 
-  name_list[[i]] <- expr_data$HGNC_Symbol
-}
-
-common_genes <- tibble(Reduce(intersect, name_list))
-names(common_genes) <- "HGNC_Symbol"
 
 # prepare metadata and expression data and save into list 
 for (i in 1:ncol(combinations)) {
@@ -68,7 +68,6 @@ for (i in 1:ncol(combinations)) {
   list_all_metadata[[i]] <- meta_list
   list_all_exprdata[[i]] <- expr_list
 }
-
 
 # vector with names of all data sets
 dataset_vector = str_replace_all(expr_dir_paths, c("/inwosu/Meta_Analysis/Data/race_expression_data/" = "", ".tsv.gz" = ""))
@@ -143,15 +142,22 @@ meta_object <- createObjectMA(listEX = expr_list,
                               expGroups = phenoCases,
                               refGroups = phenoControls)
 
+
+names(meta_object) <- str_replace_all(expr_dir_paths, c("/inwosu/Meta_Analysis/Data/race_expression_data/" = "", ".tsv.gz" = ""))
+
 resultsMA <- metaAnalysisDE(meta_object, typeMethod = "REM")
 
 new_results <- resultsMA |>
-  filter(FDR < 0.05)
+  filter(FDR < 0.05) |>
+  arrange(desc(abs(Com.ES))) |> 
+  head(n = 50) |>
+  as_tibble(rownames = NA) |> 
+  rownames_to_column("Gene")
 
 source("/inwosu/Meta_Analysis/2_race_metaanalysis/functions/draw_Heatmap.R")
 
 heatmap_values <- draw_Heatmap(objectMA = meta_object,
-                               resMA = resultsMA,
+                               resMA = new_results,
                                typeMethod = "REM",
                                scaling = "zscor",
                                fdrSig = 0.05,
@@ -164,6 +170,4 @@ heatmap_values <- draw_Heatmap(objectMA = meta_object,
  
 top_genes = as.data.frame(rownames(heatmap_values)) #check if top_genes is the same as new_result 
 # write_tsv(top_genes, file.path("/inwosu/Meta_Analysis/Data/", "race_genes.tsv"))
-# 
-# effects <- calculateES(meta_object)
-# head(effects$ES)
+
