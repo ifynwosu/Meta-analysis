@@ -15,7 +15,7 @@ docker build -t inwosu/metaanalysis_01 .
 dockerCommand="docker run -i -t --rm \
     -u $(id -u):$(id -g) \
     -v $(pwd):/1_prepare_data \
-    -v $(pwd)/../../curated_data/Data:/Data \
+    -v $(pwd)/../../Meta_Analysis/Data:/Data \
     inwosu/metaanalysis_01"
 
 time $dockerCommand Rscript scripts/data_prep.R

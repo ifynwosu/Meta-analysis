@@ -1,5 +1,5 @@
-#make the vectors into variables
 
+# create vectors of all poosible combinations of values
 pos_er_values = c("pos", "1", "P", "ER+", "Positive", "ER pos", "ERpos", "POS", "+", "Positve", "estrogen receptor (ER)+",
                   "+;3", "+;4", "+;5", "+;5-6", "+;6", "+;6-7", "+;7", "+;8")
 neg_er_values = c("neg", "0", "N", "ER-", "Negative", "ER neg", "ERneg", "NEG", "-", "ER negative")
@@ -11,6 +11,7 @@ neg_pr_values = c("neg", "0", "N", "PR-", "Negative", "PgR-", "progesterone rece
 pos_her2_values = c("pos", "1", "P", "HER2+", "Positive", "over-expression", "He+", "POS", "pos (3+)", "yes", "3+", "3")
 neg_her2_values = c("neg", "0", "N", "HER2-", "Negative", "normal", "He-", "NEG", "no", "0/1", "0-1", "1+", "1+ (only 1 core pos.)")
 
+# different functions to replace individual hormone receptor status like ER, PR, HER2
 replace_ER <- function(data) {
   data %>% 
     mutate(ER_Status = ifelse(ER_Status %in% pos_er_values, "positive", ER_Status)) %>% 
@@ -34,9 +35,12 @@ replace_race <- function(data) {
     mutate(race = case_when(
       race %in% c("Caucasian", "W", "w", "European American", "WHITE", "white") ~ "White", 
       race %in% c("African American", "B", "b", "BLACK OR AFRICAN AMERICAN", "black") ~ "Black",
+      race %in% c("asian", "ASIAN", "a", "A") ~ "Asian",
+      race %in% c("hispanic", "Mexico Hispanic", "H") ~ "Hispanic",
       TRUE ~ race))
 }
 
+# use this function if dataset has all 3 hormone recetor status
 replace_HR_status <- function(data) {
   data %>%
     mutate(ER_Status = case_when(
