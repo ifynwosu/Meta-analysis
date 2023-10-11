@@ -14,20 +14,20 @@ neg_her2_values = c("neg", "0", "N", "HER2-", "Negative", "normal", "He-", "NEG"
 # different functions to replace individual hormone receptor status like ER, PR, HER2
 replace_ER <- function(data) {
   data %>% 
-    mutate(ER_Status = ifelse(ER_Status %in% pos_er_values, "positive", ER_Status)) %>% 
-    mutate(ER_Status = ifelse(ER_Status %in% neg_er_values, "negative", ER_Status))
+    mutate(ER_status = ifelse(ER_status %in% pos_er_values, "positive", ER_status)) %>% 
+    mutate(ER_status = ifelse(ER_status %in% neg_er_values, "negative", ER_status))
 }
 
 replace_PR <- function(data) {
   data %>% 
-    mutate(PR_Status = ifelse(PR_Status %in% pos_pr_values, "positive", PR_Status)) %>% 
-    mutate(PR_Status = ifelse(PR_Status %in% neg_pr_values, "negative", PR_Status))
+    mutate(PR_status = ifelse(PR_status %in% pos_pr_values, "positive", PR_status)) %>% 
+    mutate(PR_status = ifelse(PR_status %in% neg_pr_values, "negative", PR_status))
 }
 
 replace_HER2 <- function(data) {
   data %>% 
-    mutate(HER2_Status = ifelse(HER2_Status %in% pos_her2_values, "positive", HER2_Status)) %>% 
-    mutate(HER2_Status = ifelse(HER2_Status %in% neg_her2_values, "negative", HER2_Status))
+    mutate(HER2_status = ifelse(HER2_status %in% pos_her2_values, "positive", HER2_status)) %>% 
+    mutate(HER2_status = ifelse(HER2_status %in% neg_her2_values, "negative", HER2_status))
 }
 
 replace_race <- function(data) {
@@ -43,36 +43,36 @@ replace_race <- function(data) {
 # use this function if dataset has all 3 hormone recetor status
 replace_HR_status <- function(data) {
   data %>%
-    mutate(ER_Status = case_when(
-      ER_Status %in% pos_er_values ~ "positive",
-      ER_Status %in% neg_er_values ~ "negative",
-      TRUE ~ ER_Status),
-      PR_Status = case_when(
-      PR_Status %in% pos_pr_values ~ "positive",
-      PR_Status %in% neg_pr_values ~ "negative",
-      TRUE ~ PR_Status),
-      HER2_Status = case_when(
-      HER2_Status %in% pos_her2_values ~ "positive",
-      HER2_Status %in% neg_her2_values ~ "negative",
-      TRUE ~ HER2_Status))
+    mutate(ER_status = case_when(
+      ER_status %in% pos_er_values ~ "positive",
+      ER_status %in% neg_er_values ~ "negative",
+      TRUE ~ ER_status),
+      PR_status = case_when(
+      PR_status %in% pos_pr_values ~ "positive",
+      PR_status %in% neg_pr_values ~ "negative",
+      TRUE ~ PR_status),
+      HER2_status = case_when(
+      HER2_status %in% pos_her2_values ~ "positive",
+      HER2_status %in% neg_her2_values ~ "negative",
+      TRUE ~ HER2_status))
 }
 
 
 
 # replace_value_r <- function(data) {
 #   data %>%
-#     mutate(ER_Status = case_when(
-#       ER_Status %in% c("pos", "1", "P", "ER+") ~ "Positive",
-#       ER_Status %in% c("neg", "0", "N", "ER-") ~ "Negative",
-#       TRUE ~ ER_Status),
-#       PR_Status = case_when(
-#         PR_Status %in% c("pos", "1", "P", "PR+") ~ "Positive",
-#         PR_Status %in% c("neg", "0", "N", "PR-") ~ "Negative",
-#         TRUE ~ PR_Status),
-#       HER2_Status = case_when(
-#         HER2_Status %in% c("pos", "1", "P", "HER2+") ~ "Positive",
-#         HER2_Status %in% c("neg", "0", "N", "HER2-") ~ "Negative",
-#         TRUE ~ HER2_Status),
+#     mutate(ER_status = case_when(
+#       ER_status %in% c("pos", "1", "P", "ER+") ~ "Positive",
+#       ER_status %in% c("neg", "0", "N", "ER-") ~ "Negative",
+#       TRUE ~ ER_status),
+#       PR_status = case_when(
+#         PR_status %in% c("pos", "1", "P", "PR+") ~ "Positive",
+#         PR_status %in% c("neg", "0", "N", "PR-") ~ "Negative",
+#         TRUE ~ PR_status),
+#       HER2_status = case_when(
+#         HER2_status %in% c("pos", "1", "P", "HER2+") ~ "Positive",
+#         HER2_status %in% c("neg", "0", "N", "HER2-") ~ "Negative",
+#         TRUE ~ HER2_status),
 #       race = case_when(
 #         race %in% c("Caucasian", "W", "w") ~ "White", 
 #         race %in% c("African American", "B", "b") ~ "Black",
@@ -112,20 +112,20 @@ replace_HR_status <- function(data) {
 # }
 
 # new_metadata <- new_metadata %>%
-#   mutate(ER_Status = case_when(
-#     ER_Status %in% c("pos", "1", "P", "ER+") ~ "Positive",
-#     ER_Status %in% c("neg", "0", "N", "ER-") ~ "Negative",
-#     TRUE ~ ER_Status
+#   mutate(ER_status = case_when(
+#     ER_status %in% c("pos", "1", "P", "ER+") ~ "Positive",
+#     ER_status %in% c("neg", "0", "N", "ER-") ~ "Negative",
+#     TRUE ~ ER_status
 #   ),
-#   PR_Status = case_when(
-#     PR_Status %in% c("pos", "1", "P", "PR+") ~ "Positive",
-#     PR_Status %in% c("neg", "0", "N", "PR-") ~ "Negative",
-#     TRUE ~ PR_Status
+#   PR_status = case_when(
+#     PR_status %in% c("pos", "1", "P", "PR+") ~ "Positive",
+#     PR_status %in% c("neg", "0", "N", "PR-") ~ "Negative",
+#     TRUE ~ PR_status
 #   ),
-#   HER2_Status = case_when(
-#     HER2_Status %in% c("pos (3+)", "1", "P", "HER2+") ~ "Positive",
-#     HER2_Status %in% c("neg", "0", "N", "HER2-") ~ "Negative",
-#     TRUE ~ HER2_Status
+#   HER2_status = case_when(
+#     HER2_status %in% c("pos (3+)", "1", "P", "HER2+") ~ "Positive",
+#     HER2_status %in% c("neg", "0", "N", "HER2-") ~ "Negative",
+#     TRUE ~ HER2_status
 #   ),
 # race = case_when(
 #   race %in% c("Caucasian", "W", "w") ~ "White",

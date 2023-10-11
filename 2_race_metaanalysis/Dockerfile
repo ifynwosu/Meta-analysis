@@ -1,9 +1,6 @@
 FROM bioconductor/bioconductor_docker:RELEASE_3_17
 
 #install required packages
-RUN R -e 'BiocManager::install(c("BiocManager", "GEOquery",  "SCAN.UPC", "RankProd"), force = TRUE)'
-RUN R -e 'install.packages(c("devtools", "tidyverse", "metafor", "rjson", "tools"), force = TRUE)'
+RUN R -e 'BiocManager::install(c("tidyverse", "tools", "janitor", "DExMA"), force = TRUE)'
 
-WORKDIR /1_run_metaanalysis
-
-
+WORKDIR /2_race_metaanalysis
