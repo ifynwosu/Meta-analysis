@@ -16,6 +16,18 @@ expr_dir  <- "/Data/expression_data/race"
 expr_dir_paths <- list.files(expr_dir, full.names = T)
 expr_list <- list()
 
+# get common genes to use in meta-analysis
+gene_list <- list()
+
+for (i in 1:length(expr_dir_paths)) {
+  expr_file <- (expr_dir_paths[i])
+  expr_data <- read_tsv(expr_file) 
+  gene_list[[i]] <- expr_data$HGNC_Symbol
+}
+
+common_dataset_genes <- tibble(Reduce(intersect, gene_list))
+names(common_dataset_genes) <- "HGNC_Symbol"
+
 # Define a vector to save combinations for use in generating meta-analysis list
 my_vector <- c(length(meta_dir_paths)) 
 
@@ -39,8 +51,8 @@ for (i in 1:ncol(combinations)) {
     expr_data <-read_tsv(file = expr_dir_paths[combinations[,i][j]]) |>
       dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Chromosome", "Ensembl_Gene_ID", "Gene_Biotype")) |>
       distinct(HGNC_Symbol, .keep_all = TRUE) |>
+      inner_join(common_dataset_genes) |>
       column_to_rownames(var = "HGNC_Symbol") |>
-    #   na.omit() |>
       as.matrix()
     expr_list[[j]] <- expr_data
     names(expr_list)[j] <- unique(meta_list[[j]][["Dataset_ID"]])
@@ -58,6 +70,9 @@ phenoGroups = rep("race", length(combinations[,1]))
 phenoCases = rep(list("Black"), length(combinations[,1]))
 phenoControls = rep(list("White"), length(combinations[,1]))
 
+# create vector to store results from meta-analysis
+meta_analysis_genes <- list()
+
 # Perform meta-analysis
 for (i in seq_along(list_all_exprdata)) {
   meta_object <- createObjectMA(listEX = list_all_exprdata[[i]], 
@@ -71,13 +86,19 @@ for (i in seq_along(list_all_exprdata)) {
   new_results <- meta_results |>
     filter(FDR < 0.05) |>
     arrange(desc(abs(Com.ES))) |> 
-    head(n = 1000) |>
     as_tibble(rownames = NA) |> 
     rownames_to_column("Gene")
+
+  meta_analysis_genes[[i]] <- new_results$Gene
   
   missing_dataset <- setdiff(dataset_vector, names(meta_object))
   write_tsv(new_results, file.path(meta_results_dir, paste0("meta_results_without_", missing_dataset, ".tsv")))
 }
+
+common_meta_genes <- tibble(Reduce(intersect, meta_analysis_genes))
+names(common_meta_genes) <- "Genes"
+
+write_tsv(common_meta_genes, file.path("/Data/results/", "race_common_genes.tsv"))
 
 # This section is for meta analysis on the full data sets.
 for (i in seq_along(expr_dir_paths)) {
@@ -92,7 +113,6 @@ for (i in seq_along(expr_dir_paths)) {
     dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Chromosome", "Ensembl_Gene_ID", "Gene_Biotype")) |>
     distinct(HGNC_Symbol, .keep_all = TRUE) |>
     column_to_rownames(var = "HGNC_Symbol") |>
-    # na.omit() |>
     as.matrix()
   expr_list[[i]] <- expr_data
   names(expr_list)[i] <- metadata[["Dataset_ID"]][[1]]
@@ -111,20 +131,15 @@ full_meta_object <- createObjectMA(listEX = expr_list,
 full_meta_results <- metaAnalysisDE(full_meta_object, typeMethod = "REM", missAllow = 0.1, proportionData = 0.9)
 
 new_full_results <- full_meta_results |>
-  arrange(FDR) |>
-  as_tibble(rownames = NA) |>
-  rownames_to_column("Gene")
+    filter(FDR < 0.05) |>
+    arrange(desc(abs(Com.ES))) |>
+    as_tibble(rownames = NA) |>
+    rownames_to_column("Gene")
 
 write_tsv(new_full_results, file.path("/Data/results/", "race_full_meta_results.tsv"))
 
-# full_meta_object_output <- "race_meta_object.txt"
-# write.table(full_meta_object, file = full_meta_object_output, quote = FALSE, row.names = FALSE, col.names = FALSE)
-
-# full_meta_result_output <- "race_meta_result.txt"
-# write.table(full_meta_results, file = full_meta_result_output, quote = FALSE, row.names = FALSE, col.names = FALSE)
-
 source("/prepare_data/functions/draw_Heatmap.R")
-png("/Data/results/race_heatmap.png", width = 30, height = 12, units = "in", res = 300)
+png("/Data/results/race_heatmap.png", width = 24, height = 12, units = "in", res = 300)
 heatmap_values <- draw_Heatmap(objectMA = full_meta_object,
                                resMA = full_meta_results,
                                typeMethod = "REM",
@@ -138,7 +153,7 @@ heatmap_values <- draw_Heatmap(objectMA = full_meta_object,
 dev.off()
 
 top_genes = as.data.frame(rownames(heatmap_values)) #check if top_genes is the same as new_result 
-write_tsv(top_genes, file.path("/Data/results/", "race_genes.tsv"))
+write_tsv(top_genes, file.path("/Data/results/", "race_heatmap_genes.tsv"))
 
 # effects <- calculateES(meta_object)
 # head(effects$ES)

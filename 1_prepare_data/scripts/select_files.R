@@ -41,10 +41,10 @@ if (!dir.exists(HER2_expression_data_path)) {
 }
 
 # directory where expression data is stored
-expr_dir <- "/Data/analysis_ready_expression_data/"
+expr_dir <- "/inwosu/Meta_Analysis/Data/analysis_ready_expression_data/"
 
 # assign directory where clean metadata is stored
-metadata_dir <- "/Data/analysis_ready_renamed_metadata/"
+metadata_dir <- "/inwosu/Meta_Analysis/Data/analysis_ready_renamed_metadata/"
 meta_dir_paths <- list.files(metadata_dir, full.names = T)
 
 race_data <- tibble()
@@ -187,5 +187,72 @@ names_file <- big_HER2_data$Dataset_ID |> tibble()
 copy_data(expr_dir, HER2_expression_data_path)
 
 
+
+### triple negative status
+triple_negative_metadata_path <- "/inwosu/Meta_Analysis/Data/metadata/triple_negative/"
+if (!dir.exists(triple_negative_metadata_path)) {
+  dir.create(triple_negative_metadata_path, recursive = TRUE)
+}
+
+triple_negative_expression_data_path <- "/inwosu/Meta_Analysis/Data/expression_data/triple_negative/"
+if (!dir.exists(triple_negative_expression_data_path)) {
+  dir.create(triple_negative_expression_data_path, recursive = TRUE)
+}
+
+ER <- big_ER_data$Dataset_ID |> as_tibble()
+PR <- big_PR_data$Dataset_ID |> as_tibble()
+HER2 <- big_HER2_data$Dataset_ID |> as_tibble()
+
+combined_data <- intersect(ER, PR)
+combined_data <- intersect(combined_data, HER2)
+names(combined_data) <- "Dataset_ID"
+
+# copy metadata
+combined_data$Dataset_ID <- paste0(combined_data$Dataset_ID, ".tsv")
+names_file <- combined_data$Dataset_ID 
+copy_data(metadata_dir, triple_negative_metadata_path)
+
+# copy expression data
+combined_data$Dataset_ID <- paste0(combined_data$Dataset_ID, ".gz") 
+names_file <- combined_data$Dataset_ID
+copy_data(expr_dir, triple_negative_expression_data_path)
+
+
+triple_negative_path <- list.files(triple_negative_metadata_path, full.names = T)
+
+# replace_trip_neg <- function(data) {
+#   data %>%
+#     mutate(result = case_when(
+#       ER_status == "negative" & PR_status == "negative" & HER2_status == "negative" ~ "tri_neg",
+#       ER_status == "negative" & PR_status == "negative" & HER2_status == is.na(HER2_status) ~ "tri_neg",
+#       .default = "non_tri_neg")) |>
+#     select(Dataset_ID, Sample_ID, ER_status, PR_status, HER2_status, result, everything())
+# }
+
+replace_trip_neg <- function(data) {
+  data %>%
+    mutate(result = case_when(
+      ER_status == "positive" ~ "non_tri_neg",
+      PR_status == "positive" ~ "non_tri_neg",
+      HER2_status == "positive" ~ "non_tri_neg",
+      ER_status == "negative" & PR_status == "negative" & HER2_status == "negative" ~ "tri_neg")) |>
+    select(Dataset_ID, Sample_ID, ER_status, PR_status, HER2_status, result, everything())
+}
+
+for (i in seq_along(triple_negative_path)) {
+  meta_file <- (triple_negative_path[i])
+  meta_data <- read_tsv(meta_file) |>
+    replace_trip_neg() |>
+    filter(!is.na(result))
+  write_tsv(meta_data, file.path("/inwosu/Meta_Analysis/Data/metadata/triple_negative/",  paste0(meta_data$Dataset_ID[1], ".tsv")))
+}
+
 #check data labels from beginning to the predicted data (GEO to predicted df)
+mydata <- read_tsv("/inwosu/Meta_Analysis/Data/metadata/triple_negative/GSE96058_HiSeq.tsv")
+
+meta_data <- mydata |>
+  #replace_trip_neg() |>
+  filter(!is.na(result))
+
+is.na(mydata$ER_status)
 

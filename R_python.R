@@ -26,4 +26,6 @@ use_condaenv(condaenv = "myenv", conda = "/inwosu/miniconda/bin/conda")
 #install python libraries to work with.
 py_install(packages = c("pandas", "scikit-learn"))
 
+py_install(packages = "imbalanced-learn")
+
 

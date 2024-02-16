@@ -59,6 +59,8 @@ replace_HR_status <- function(data) {
 
 
 
+
+# old script 
 # replace_value_r <- function(data) {
 #   data %>%
 #     mutate(ER_status = case_when(

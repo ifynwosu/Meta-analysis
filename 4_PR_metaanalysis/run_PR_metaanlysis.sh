@@ -15,8 +15,8 @@ docker build -t inwosu/metaanalysis_pr_status_04 .
 dockerCommand="docker run -i -t --rm \
     -u $(id -u):$(id -g) \
     -v $(pwd):/4_PR_metaanalysis \
-    -v $(pwd)/../../Meta_Analysis/1_prepare_data:/prepare_data \
-    -v $(pwd)/../../Meta_Analysis/Data:/Data \
+    -v $(pwd)/../1_prepare_data:/prepare_data \
+    -v $(pwd)/../Data:/Data \
     inwosu/metaanalysis_pr_status_04"
 
 time $dockerCommand Rscript scripts/run_PR_metaanalysis.R

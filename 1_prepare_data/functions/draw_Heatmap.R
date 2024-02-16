@@ -5,7 +5,7 @@ draw_Heatmap <- function(objectMA, resMA,
                         typeMethod = c("FEM", "REM", "maxP", "minP","Fisher", "Stouffer", "ACAT"),
                         scaling = c("zscor","rscale","swr","none"),
                         regulation = c("all", "up","down"),
-                        breaks = c(-2,2),
+                        breaks = c(-1.5,1.5),
                         fdrSig,
                         numSig,
                         color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdBu")))(100),
@@ -66,8 +66,11 @@ draw_Heatmap <- function(objectMA, resMA,
   )
 
     ## Heatmap
+    # ann <- data.frame(variable = ifelse(all.cl == 0, control, case),
+    #                     dataset = sizes, row.names = colnames(exp.ALL))
+
     ann <- data.frame(variable = ifelse(all.cl == 0, control, case),
-                        dataset = sizes, row.names = colnames(exp.ALL))
+                        row.names = colnames(exp.ALL))
     
     if (numSig > 60) {
         show.rownames = FALSE
