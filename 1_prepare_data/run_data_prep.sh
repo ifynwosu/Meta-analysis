@@ -21,3 +21,4 @@ dockerCommand="docker run -i -t --rm \
 time $dockerCommand Rscript scripts/data_prep.R
 
 # $dockerCommand bash
+# -v $(pwd)/../../Meta_Analysis/Data:/Data \

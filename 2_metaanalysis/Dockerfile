@@ -3,4 +3,4 @@ FROM bioconductor/bioconductor_docker:RELEASE_3_17
 #install required packages
 RUN R -e 'BiocManager::install(c("tidyverse", "tools", "janitor", "DExMA"), force = TRUE)'
 
-WORKDIR /6_triple_negative
+WORKDIR /2_metaanalysis

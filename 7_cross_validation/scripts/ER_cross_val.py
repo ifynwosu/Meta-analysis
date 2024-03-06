@@ -14,9 +14,6 @@ num_cv_runs = 100
 kfold = StratifiedKFold(n_splits = 5) # test diff values 
 cv_method = kfold  
 
-# do we want to test diff values? These are some other options we may consider
-# kfold = KFold(n_splits = 3)
-# (cv_method = LeaveOneOut())
 
 # create model
 model = RandomForestClassifier(n_estimators = 100, random_state = 1) # look at the default parameters

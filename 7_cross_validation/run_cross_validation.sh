@@ -18,6 +18,7 @@ dockerCommand="docker run -i -t --rm \
     -v $(pwd)/../Data:/Data \
     inwosu/metaanalysis_cross_validation_07"
 
-time $dockerCommand python3 scripts/run_all_cross_val.py
+time $dockerCommand Rscript scripts/cross_val.R
+# time $dockerCommand python3 scripts/run_all_cross_val.py
 
 # $dockerCommand bash

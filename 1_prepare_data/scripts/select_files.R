@@ -1,50 +1,34 @@
 
 # create relevant directories
-race_metadata_path <- "/Data/metadata/race/"
-if (!dir.exists(race_metadata_path)) {
-  dir.create(race_metadata_path, recursive = TRUE)
+
+create_directory <- function(directory_path) {
+    if (!dir.exists(directory_path)) {
+        dir.create(directory_path, recursive = TRUE)
+    }
+    return(directory_path)
 }
 
-race_expression_data_path <- "/Data/expression_data/race/"
-if (!dir.exists(race_expression_data_path)) {
-  dir.create(race_expression_data_path, recursive = TRUE)
-}
+race_metadata_path <- create_directory("/Data/metadata/race/")
+race_expression_data_path <- create_directory("/Data/expression_data/race/")
 
-ER_metadata_path <- "/Data/metadata/ER_status/"
-if (!dir.exists(ER_metadata_path)) {
-  dir.create(ER_metadata_path, recursive = TRUE)
-}
+ER_metadata_path <- create_directory("/Data/metadata/ER_status/")
+ER_expression_data_path <- create_directory("/Data/expression_data/ER_status/")
 
-ER_expression_data_path <- "/Data/expression_data/ER_status/"
-if (!dir.exists(ER_expression_data_path)) {
-  dir.create(ER_expression_data_path, recursive = TRUE)
-}
+PR_metadata_path <- create_directory("/Data/metadata/PR_status/")
+PR_expression_data_path <- create_directory("/Data/expression_data/PR_status/")
 
-PR_metadata_path <- "/Data/metadata/PR_status/"
-if (!dir.exists(PR_metadata_path)) {
-  dir.create(PR_metadata_path, recursive = TRUE)
-}
+HER2_metadata_path <- create_directory("/Data/metadata/HER2_status/")
+HER2_expression_data_path <- create_directory("/Data/expression_data/HER2_status/")
 
-PR_expression_data_path <- "/Data/expression_data/PR_status/"
-if (!dir.exists(PR_expression_data_path)) {
-  dir.create(PR_expression_data_path, recursive = TRUE)
-}
+triple_neg_metadata_path <- create_directory("/Data/metadata/tri_neg_status/")
+triple_neg_expr_data_path <- create_directory("/Data/expression_data/tri_neg_status/")
 
-HER2_metadata_path <- "/Data/metadata/HER2_status/"
-if (!dir.exists(HER2_metadata_path)) {
-  dir.create(HER2_metadata_path, recursive = TRUE)
-}
-
-HER2_expression_data_path <- "/Data/expression_data/HER2_status/"
-if (!dir.exists(HER2_expression_data_path)) {
-  dir.create(HER2_expression_data_path, recursive = TRUE)
-}
 
 # directory where expression data is stored
-expr_dir <- "/inwosu/Meta_Analysis/Data/analysis_ready_expression_data/"
+expr_dir <- "/Data/analysis_ready_expression_data/"
 
-# assign directory where clean metadata is stored
-metadata_dir <- "/inwosu/Meta_Analysis/Data/analysis_ready_renamed_metadata/"
+# directory where clean metadata will be stored
+metadata_dir <- "/Data/analysis_ready_renamed_metadata/"
 meta_dir_paths <- list.files(metadata_dir, full.names = T)
 
 race_data <- tibble()
@@ -53,80 +37,70 @@ pr_data <- tibble()
 her2_data <- tibble()
 
 for (i in seq_along(meta_dir_paths)) {
-  sum_race <- data.frame(Dataset_ID = character(0), race = character(0), n = numeric(0))
-  sum_ER <- data.frame(Dataset_ID = character(0), ER_status = character(0), n = numeric(0))
-  sum_PR <- data.frame(Dataset_ID = character(0), PR_status = character(0), n = numeric(0))
-  sum_HER2 <- data.frame(Dataset_ID = character(0), HER2_status = character(0), n = numeric(0))
-  
-  file = meta_dir_paths[i]
-  gseID <- file %>% basename() %>% file_path_sans_ext()
-  
-  metadata <- read_tsv(file) %>%
-    mutate(across(everything(), as.character))
-  
-  if ("race" %in% names(metadata)) {
-    sum_race <- metadata %>% group_by(race) %>% tally() %>% mutate(Dataset_ID = gseID) %>% relocate(Dataset_ID)
-  }
-  race_data <- rbind(race_data, sum_race)
-  
-  if ("ER_status" %in% names(metadata)) {
-    sum_ER <- metadata %>% group_by(ER_status) %>% tally() %>% mutate(Dataset_ID = gseID) %>% relocate(Dataset_ID)
-  }
-  er_data <- rbind(er_data, sum_ER)
-  
-  if ("PR_status" %in% names(metadata)) {
-    sum_PR <- metadata %>% group_by(PR_status) %>% tally() %>% mutate(Dataset_ID = gseID) %>% relocate(Dataset_ID)
-  }
-  pr_data <- rbind(pr_data, sum_PR)
-  
-  if ("HER2_status" %in% names(metadata)) {
-    sum_HER2 <- metadata %>% group_by(HER2_status) %>% tally() %>% mutate(Dataset_ID = gseID) %>% relocate(Dataset_ID)
-  }
-  her2_data <- rbind(her2_data, sum_HER2)
+    sum_race <- data.frame(Dataset_ID = character(0), race = character(0), n = numeric(0))
+    sum_ER <- data.frame(Dataset_ID = character(0), ER_status = character(0), n = numeric(0))
+    sum_PR <- data.frame(Dataset_ID = character(0), PR_status = character(0), n = numeric(0))
+    sum_HER2 <- data.frame(Dataset_ID = character(0), HER2_status = character(0), n = numeric(0))
+    
+    file <- meta_dir_paths[i]
+    gseID <- file |> basename() |> file_path_sans_ext()
+    
+    metadata <- read_tsv(file) %>%
+        mutate(across(everything(), as.character))
+    
+    if ("race" %in% names(metadata)) {
+        sum_race <- metadata |> group_by(race) |> tally() |> mutate(Dataset_ID = gseID) |> relocate(Dataset_ID)
+    }
+    race_data <- rbind(race_data, sum_race)
+    
+    if ("ER_status" %in% names(metadata)) {
+        sum_ER <- metadata |> group_by(ER_status) |> tally() |> mutate(Dataset_ID = gseID) |> relocate(Dataset_ID)
+    }
+    er_data <- rbind(er_data, sum_ER)
+    
+    if ("PR_status" %in% names(metadata)) {
+        sum_PR <- metadata |> group_by(PR_status) |> tally() |> mutate(Dataset_ID = gseID) |> relocate(Dataset_ID)
+    }
+    pr_data <- rbind(pr_data, sum_PR)
+    
+    if ("HER2_status" %in% names(metadata)) {
+        sum_HER2 <- metadata |> group_by(HER2_status) |> tally() |> mutate(Dataset_ID = gseID) |> relocate(Dataset_ID)
+    }
+    her2_data <- rbind(her2_data, sum_HER2)
 }
 
-# save race and hormone receptor information
-# big_race_data <- filter_data(race_data, race, n, Black, White)
-# big_ER_data <- filter_data(er_data, race, n, negative, positive)
-# big_PR_data <- filter_data(pr_data, race, n, negative, positive)
-# big_HER2_data <- filter_data(her2_data, race, n, negative, positive)
-# write_tsv(big_race_data, file.path("/Data/", "race_data.tsv")) (use as template)
-
 big_race_data <- race_data |>
-  pivot_wider(names_from = race, values_from = n) |>
-  mutate(proportion = (Black/White)) |>
-  arrange(proportion) |>
-  #mutate(across(proportion, round, 5)) |>
-  filter(between(proportion, 0.05, 20)) |>
-  filter(Black >= 10, White >= 10) |>
-  filter(!Dataset_ID == "GSE62944_Normal")
+    pivot_wider(names_from = race, values_from = n) |>
+    mutate(proportion = (Black/White)) |>
+    arrange(proportion) |>
+    filter(between(proportion, 0.05, 20)) |>
+    filter(Black >= 10, White >= 10) |>
+    filter(!Dataset_ID == "GSE62944_Normal")
 
 big_ER_data <- er_data |>
-  pivot_wider(names_from = ER_status, values_from = n) |>
-  mutate(proportion = (negative/positive)) |>
-  arrange(proportion) |>
-  #mutate(across(proportion, round, 5)) |>
-  filter(between(proportion, 0.05, 20)) |>
-  filter(negative >= 10, positive >= 10) |>
-  filter(!Dataset_ID == "GSE62944_Normal")
+    pivot_wider(names_from = ER_status, values_from = n) |>
+    mutate(proportion = (negative/positive)) |>
+    arrange(proportion) |>
+    filter(between(proportion, 0.05, 20)) |>
+    filter(negative >= 10, positive >= 10) |>
+    filter(!Dataset_ID == "GSE62944_Normal")
 
-big_PR_data <- pr_data %>% 
-  pivot_wider(names_from = PR_status, values_from = n) |>
-  mutate(proportion = (negative/positive)) |>
-  arrange(proportion) |>
-  #mutate(across(proportion, round, 5)) |>
-  filter(between(proportion, 0.05, 20)) |>
-  filter(negative >= 10, positive >= 10) |>
-  filter(!Dataset_ID == "GSE62944_Normal")
+big_PR_data <- pr_data |> 
+    pivot_wider(names_from = PR_status, values_from = n) |>
+    mutate(proportion = (negative/positive)) |>
+    arrange(proportion) |>
+    filter(between(proportion, 0.05, 20)) |>
+    filter(negative >= 10, positive >= 10) |>
+    filter(!Dataset_ID == "GSE62944_Normal")
 
-big_HER2_data <- her2_data %>% 
-  pivot_wider(names_from = HER2_status, values_from = n) |>
-  mutate(proportion = (negative/positive)) |>
-  arrange(proportion) |>
-  #mutate(across(proportion, round, 5)) |>
-  filter(between(proportion, 0.05, 20)) |>
-  filter(negative >= 10, positive >= 10) |>
-  filter(!Dataset_ID == "GSE62944_Normal")
+big_HER2_data <- her2_data |>
+    pivot_wider(names_from = HER2_status, values_from = n) |>
+    mutate(proportion = (negative/positive)) |>
+    arrange(proportion) |>
+    #mutate(across(proportion, round, 5)) |>
+    filter(between(proportion, 0.05, 20)) |>
+    filter(negative >= 10, positive >= 10) |>
+    filter(!Dataset_ID == "GSE62944_Normal")
 
 # write_tsv(big_race_data, file.path("/Data/", "race_data.tsv"))
 # write_tsv(big_ER_data, file.path("/Data/", "ER_data.tsv"))
@@ -134,71 +108,34 @@ big_HER2_data <- her2_data %>%
 # write_tsv(big_HER2_data, file.path("/Data/", "HER2_data.tsv"))
 
 # copy necessary files to appropriate folders for analysis in later steps
-# function to copy relevant files
-copy_data <- function(data_from, data_to) {
-  for(i in names_file) {
-    dataPath <- paste0(data_from, i)
-    file.copy(dataPath, data_to)
-  }
+
+copy_data <- function(names_file, data_from, data_to) {
+    for (i in names_file) {
+        dataPath <- paste0(data_from, i)
+        file.copy(dataPath, data_to)
+    }
 }
 
-### race
-# metadata
-big_race_data$Dataset_ID <- paste0(big_race_data$Dataset_ID, ".tsv") # add ".tsv" extention to dataset id
-names_file <- big_race_data$Dataset_ID |> tibble()
-copy_data(metadata_dir, race_metadata_path)
-
-# expression data
-big_race_data$Dataset_ID <- paste0(big_race_data$Dataset_ID, ".gz") # add ".gz" extention to dataset id
-names_file <- big_race_data$Dataset_ID |> tibble()
-copy_data(expr_dir, race_expression_data_path)
-
-### ER status
-# metadata
-big_ER_data$Dataset_ID <- paste0(big_ER_data$Dataset_ID, ".tsv") 
-names_file <- big_ER_data$Dataset_ID |> tibble()
-copy_data(metadata_dir, ER_metadata_path)
-
-# expression data
-big_ER_data$Dataset_ID <- paste0(big_ER_data$Dataset_ID, ".gz") 
-names_file <- big_ER_data$Dataset_ID |> tibble()
-copy_data(expr_dir, ER_expression_data_path)
-
-### PR status
-# metadata
-big_PR_data$Dataset_ID <- paste0(big_PR_data$Dataset_ID, ".tsv") 
-names_file <- big_PR_data$Dataset_ID |> tibble()
-copy_data(metadata_dir, PR_metadata_path)
-
-# expression data
-big_PR_data$Dataset_ID <- paste0(big_PR_data$Dataset_ID, ".gz") 
-names_file <- big_PR_data$Dataset_ID |> tibble()
-copy_data(expr_dir, PR_expression_data_path)
-
-### HER2 status
-# metadata
-big_HER2_data$Dataset_ID <- paste0(big_HER2_data$Dataset_ID, ".tsv")
-names_file <- big_HER2_data$Dataset_ID |> tibble()
-copy_data(metadata_dir, HER2_metadata_path)
-
-# expression data
-big_HER2_data$Dataset_ID <- paste0(big_HER2_data$Dataset_ID, ".gz") 
-names_file <- big_HER2_data$Dataset_ID |> tibble()
-copy_data(expr_dir, HER2_expression_data_path)
-
-
-
-### triple negative status
-triple_negative_metadata_path <- "/inwosu/Meta_Analysis/Data/metadata/triple_negative/"
-if (!dir.exists(triple_negative_metadata_path)) {
-  dir.create(triple_negative_metadata_path, recursive = TRUE)
+# function to copy relevant data to respective folders
+process_data <- function(data, metadata_dir, metadata_path, expr_dir, expression_data_path) {
+    
+    data$Dataset_ID <- paste0(data$Dataset_ID, ".tsv") # Add ".tsv" extension to dataset id
+    names_file <- data$Dataset_ID |>
+        as_tibble()
+    copy_data(names_file, metadata_dir, metadata_path)
+    
+    data$Dataset_ID <- paste0(data$Dataset_ID, ".gz") # Add ".gz" extension to dataset id + .tsv from above
+    names_file <- data$Dataset_ID |>
+        as_tibble()
+    copy_data(names_file, expr_dir, expression_data_path)
 }
 
-triple_negative_expression_data_path <- "/inwosu/Meta_Analysis/Data/expression_data/triple_negative/"
-if (!dir.exists(triple_negative_expression_data_path)) {
-  dir.create(triple_negative_expression_data_path, recursive = TRUE)
-}
+process_data(big_race_data, metadata_dir, race_metadata_path, expr_dir, race_expression_data_path)
+process_data(big_ER_data, metadata_dir, ER_metadata_path, expr_dir, ER_expression_data_path)
+process_data(big_PR_data, metadata_dir, PR_metadata_path, expr_dir, PR_expression_data_path)
+process_data(big_HER2_data, metadata_dir, HER2_metadata_path, expr_dir, HER2_expression_data_path)
 
+# identify triple negative datasets
 ER <- big_ER_data$Dataset_ID |> as_tibble()
 PR <- big_PR_data$Dataset_ID |> as_tibble()
 HER2 <- big_HER2_data$Dataset_ID |> as_tibble()
@@ -207,52 +144,35 @@ combined_data <- intersect(ER, PR)
 combined_data <- intersect(combined_data, HER2)
 names(combined_data) <- "Dataset_ID"
 
-# copy metadata
-combined_data$Dataset_ID <- paste0(combined_data$Dataset_ID, ".tsv")
-names_file <- combined_data$Dataset_ID 
-copy_data(metadata_dir, triple_negative_metadata_path)
+process_data(combined_data, metadata_dir, triple_neg_metadata_path, expr_dir, triple_neg_expr_data_path)
 
-# copy expression data
-combined_data$Dataset_ID <- paste0(combined_data$Dataset_ID, ".gz") 
-names_file <- combined_data$Dataset_ID
-copy_data(expr_dir, triple_negative_expression_data_path)
+# identify triple negative samples
+triple_negative_path <- list.files(triple_neg_metadata_path, full.names = TRUE)
 
-
-triple_negative_path <- list.files(triple_negative_metadata_path, full.names = T)
-
-# replace_trip_neg <- function(data) {
-#   data %>%
-#     mutate(result = case_when(
-#       ER_status == "negative" & PR_status == "negative" & HER2_status == "negative" ~ "tri_neg",
-#       ER_status == "negative" & PR_status == "negative" & HER2_status == is.na(HER2_status) ~ "tri_neg",
-#       .default = "non_tri_neg")) |>
-#     select(Dataset_ID, Sample_ID, ER_status, PR_status, HER2_status, result, everything())
-# }
-
-replace_trip_neg <- function(data) {
-  data %>%
-    mutate(result = case_when(
-      ER_status == "positive" ~ "non_tri_neg",
-      PR_status == "positive" ~ "non_tri_neg",
-      HER2_status == "positive" ~ "non_tri_neg",
-      ER_status == "negative" & PR_status == "negative" & HER2_status == "negative" ~ "tri_neg")) |>
-    select(Dataset_ID, Sample_ID, ER_status, PR_status, HER2_status, result, everything())
+identify_trip_neg <- function(data) {
+    data %>%
+        mutate(tri_neg_status = case_when(
+                                          ER_status == "positive" ~ "non_tri_neg",
+                                          PR_status == "positive" ~ "non_tri_neg",
+                                          HER2_status == "positive" ~ "non_tri_neg",
+                                          ER_status == "negative" & PR_status == "negative" & HER2_status == "negative" ~ "tri_neg")) |>
+        select(Dataset_ID, Sample_ID, ER_status, PR_status, HER2_status, tri_neg_status, everything())
 }
 
 for (i in seq_along(triple_negative_path)) {
-  meta_file <- (triple_negative_path[i])
-  meta_data <- read_tsv(meta_file) |>
-    replace_trip_neg() |>
-    filter(!is.na(result))
-  write_tsv(meta_data, file.path("/inwosu/Meta_Analysis/Data/metadata/triple_negative/",  paste0(meta_data$Dataset_ID[1], ".tsv")))
+    meta_file <- (triple_negative_path[i])
+    meta_data <- read_tsv(meta_file) |>
+        identify_trip_neg() |>
+        filter(!is.na(tri_neg_status))
+    write_tsv(meta_data, file.path(triple_neg_metadata_path,  paste0(meta_data$Dataset_ID[1], ".tsv")))
 }
 
-#check data labels from beginning to the predicted data (GEO to predicted df)
-mydata <- read_tsv("/inwosu/Meta_Analysis/Data/metadata/triple_negative/GSE96058_HiSeq.tsv")
 
-meta_data <- mydata |>
-  #replace_trip_neg() |>
-  filter(!is.na(result))
-
-is.na(mydata$ER_status)
-
+# #check data labels from beginning to the predicted data (GEO to predicted df)
+# mydata <- read_tsv("/inwosu/Meta_Analysis/Data/metadata/triple_negative/GSE96058_HiSeq.tsv")
+# 
+# meta_data <- mydata |>
+#   #replace_trip_neg() |>
+#   filter(!is.na(result))
+# 
+# is.na(mydata$ER_status)
