@@ -10,3 +10,4 @@ source("/prepare_data/functions/draw_Heatmap.R")
 source("scripts/metaanalysis.R")
 
 warnings()
+# sessionInfo()

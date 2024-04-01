@@ -12,9 +12,16 @@ test_data/
 #git push origin main
 
 #git reset --soft HEAD~1 (removes last local commit)
+# use "git restore --staged <file>..." to unstage
 
 # xtable
 # annotate
 # annotate
 # genefilter
 # sva
+
+# sudo du -hs *
+#  df -h
+
+# compressing your repo by running "git garbage collection"
+# time git gcll

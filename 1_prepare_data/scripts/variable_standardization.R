@@ -1,18 +1,20 @@
 
 # Define the file path to the standardized metadata directory
-metadata_dir <- "/Data/analysis_ready_renamed_metadata/"
+metadata_dir <- "/Data/analysis_ready_metadata/"
 
 # Create the metadata folder if it doesn't exist
 if (!dir.exists(metadata_dir)) {
     dir.create(metadata_dir, recursive = TRUE)
 }
 
-old_meta_dir <- "/Data/analysis_ready_metadata"
-meta_dir_paths <- list.files(old_meta_dir, full.names = T)
+prelim_metadata_dir <- "/Data/prelim_metadata"
+meta_dir_paths <- list.files(prelim_metadata_dir, full.names = T)
 
 for (i in seq_along(meta_dir_paths)) {
     file = meta_dir_paths[i]
-    gseID <- file |> basename() |> file_path_sans_ext()
+    gseID <- file |> 
+        basename() |> 
+        file_path_sans_ext()
     
     out_file <- paste0(metadata_dir, gseID, ".tsv")
     
@@ -24,7 +26,7 @@ for (i in seq_along(meta_dir_paths)) {
         cat("\n")
 
         metadata <- read_tsv(file) |>
-        mutate(across(everything(), as.character))
+            mutate(across(everything(), as.character))
     
         if (gseID == "GSE19615") {    
             metadata <- metadata |>

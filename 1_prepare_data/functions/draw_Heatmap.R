@@ -1,7 +1,8 @@
 # adapted from the bioconductor package "DExMA"
 # added more parameters to customize heatmap further
 
-draw_Heatmap <- function(objectMA, resMA,
+draw_Heatmap <- function(objectMA, 
+                        resMA,
                         typeMethod = c("FEM", "REM", "maxP", "minP","Fisher", "Stouffer", "ACAT"),
                         scaling = c("zscor","rscale","swr","none"),
                         regulation = c("all", "up","down"),
@@ -9,7 +10,7 @@ draw_Heatmap <- function(objectMA, resMA,
                         fdrSig,
                         numSig,
                         color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdBu")))(100),
-                        na_col = "grey",
+                        na_col = "darkgrey",
                         legend = TRUE,
                         control,
                         case,

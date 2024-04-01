@@ -44,6 +44,8 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
     common_genes <- tibble(Reduce(intersect, gene_list))
     names(common_genes) <- "HGNC_Symbol"
 
+    write_tsv(common_genes, file.path(paste0(results_dir, variable, "_common_genes.tsv")))
+
     # Define a vector to save combinations for use in generating meta-analysis list
     my_vector <- c(length(meta_dir_paths)) 
 
@@ -77,10 +79,9 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
         list_all_metadata[[i]] <- meta_list
         list_all_exprdata[[i]] <- expr_list
     }
-    
-    patterns <- setNames("", paste0(expr_dir, "/"))
-    
+
     # vector with names of all data sets
+    patterns <- setNames("", paste0(expr_dir, "/")) 
     dataset_vector = str_replace_all(expr_dir_paths, c(patterns, ".tsv.gz" = ""))
     
     # create vectors for phenotype data
@@ -92,7 +93,7 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
     # create vector to store results from meta-analysis
     meta_analysis_genes <- list()
 
-    # Perform meta-analysis
+    # Perform meta-analysis on n-1 datasets
     for (i in seq_along(list_all_exprdata)) {
         meta_object <- createObjectMA(listEX = list_all_exprdata[[i]], 
                                     listPheno = list_all_metadata[[i]], 
@@ -146,15 +147,20 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
                               expGroups = phenoCases,
                               refGroups = phenoControls)
 
-    full_meta_results <- metaAnalysisDE(full_meta_object, typeMethod = "REM", missAllow = 0.1, proportionData = 0.9)
-
-    new_full_results <- full_meta_results |>
-        filter(FDR < 0.05) |>
+    full_meta_results <- metaAnalysisDE(full_meta_object, typeMethod = "REM", missAllow = 0.1, proportionData = 0.9) 
+    
+    output_df <- full_meta_results |>
         arrange(desc(abs(Com.ES))) |>
-        as_tibble(rownames = NA) |>
+        as_tibble(rownames = NA) |>        
         rownames_to_column("Gene")
 
-    write_tsv(new_full_results, file.path(paste0(results_dir, variable, "_full_meta_results.tsv")))
+    write_tsv(output_df, file.path(paste0(results_dir, variable, "_full_meta_results.tsv")))
+
+    new_full_results <- output_df |>
+        filter(FDR < 0.05) |>
+        arrange(desc(abs(Com.ES))) 
+
+    write_tsv(new_full_results, file.path(paste0(results_dir, variable, "_filtered_meta_results.tsv")))
 
     # draw heatmap
     png(paste0(results_dir, variable, "__heatmap.png"), width = 24, height = 12, units = "in", res = 300)
@@ -165,15 +171,21 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
                                 fdrSig = 0.05,
                                 regulation = "all",
                                 numSig = 1000,
-                                case = "Black",
-                                control = "White",
-                                title = "Race")
+                                case = value_a,
+                                control = value_b,
+                                title = variable)
     dev.off()  
-   
 }
 
+# function(variable, filter_variable, value_a, value_b)
 run_meta("race", race, "Black", "White")
 run_meta("ER_status", ER_status, "positive", "negative")
 run_meta("PR_status", PR_status, "positive", "negative")
 run_meta("HER2_status", HER2_status, "positive", "negative")
-# run_meta("tri_neg_status", tri_neg_status, "tri_neg", "non_tri_neg")
+run_meta("tri_neg_status", tri_neg_status, "tri_neg", "non_tri_neg")
+
+# warning
+# Zero sample variances detected have been offset away from zero
+
+# total time 304m26.552s
+# tri neg 47m12.754s
