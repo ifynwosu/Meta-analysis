@@ -12,7 +12,7 @@ create_directory <- function(directory_path) {
     return(directory_path)
 }
 
-results_dir <- "/Data/results/"
+results_dir <- "/Data/metaanalysis_results/"
 
 meta <- "/Data/metadata/"
 expr <- "/Data/expression_data/"

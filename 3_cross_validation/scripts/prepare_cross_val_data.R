@@ -21,7 +21,6 @@ data_trip_neg <- create_directory("/Data/cross_validation_data/tri_neg_status")
 meta <- "/Data/metadata/"
 expr <- "/Data/expression_data/"
 
-
 prepare_data <- function(path, variable, filter_variable, filter_values) {
 
     metadata_dir <- paste0(meta, variable)
@@ -91,7 +90,7 @@ prepare_data <- function(path, variable, filter_variable, filter_values) {
     }
 
     summary <- bind_rows(data_tally, .id = "Dataset")
-    write_tsv(summary, file.path(paste0("/Data/results/", variable, "_summary.tsv")))
+    write_tsv(summary, file.path(paste0("/Data/metaanalysis_results/", variable, "_summary.tsv")))
 }
 
 # prepare_data <- function(path, variable, filter_variable, filter_values)
@@ -100,4 +99,3 @@ prepare_data(data_ER, "ER_status", ER_status, c("positive", "negative"))
 prepare_data(data_PR, "PR_status", PR_status, c("positive", "negative"))
 prepare_data(data_HER2, "HER2_status", HER2_status, c("positive", "negative"))
 prepare_data(data_trip_neg, "tri_neg_status", tri_neg_status, c("tri_neg", "non_tri_neg"))
-

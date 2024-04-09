@@ -7,7 +7,7 @@ if not os.path.exists(result_dir):
 
 # number of genes to use in cross validation
 # num_genes = [5, 10, 20]                           # values to use when testing
-num_genes = [5, 10, 20, 50, 100, 200, 500]
+num_genes = [5, 10, 20, 50, 100, 200, 500, 1000]
 
 # number of cross validation runs
 # num_cv_runs = 20                                  # values to use when testing
@@ -44,8 +44,6 @@ def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, c
 
             # select top "n" genes
             gene = gene[:num]
-
-            
 
             # read in gene expression data
             cross_val_path_name = os.path.join(cross_val_data_dir, dataset_id)
@@ -122,30 +120,30 @@ def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, c
 
 # Define the parameters for each call
 calls = [
-    # {   "accuracy_file": "accuracy_file_race.txt",
-    #     "accuracy_file_results": "accuracy_file_result_race.txt",
-    #     "meta_results_dir": "/Data/results/race/",
-    #     "cross_val_data_dir": "/Data/cross_validation_data/race/",
-    #     "variable": "race",
-    #     "val_neg": "Black",
-    #     "val_pos": "White" 
-    # },
-    # {   "accuracy_file": "accuracy_file_ER_status.txt",
-    #     "accuracy_file_results": "accuracy_file_result_ER_status.txt",
-    #     "meta_results_dir": "/Data/results/ER_status/",
-    #     "cross_val_data_dir": "/Data/cross_validation_data/ER_status/",
-    #     "variable": "ER_status",
-    #     "val_neg": "negative",
-    #     "val_pos": "positive"    
-    # },
-    # {   "accuracy_file": "accuracy_file_PR_status.txt",
-    #     "accuracy_file_results": "accuracy_file_result_PR_status.txt",
-    #     "meta_results_dir": "/Data/results/PR_status/",
-    #     "cross_val_data_dir": "/Data/cross_validation_data/PR_status/",
-    #     "variable": "PR_status",
-    #     "val_neg": "negative",
-    #     "val_pos": "positive"
-    # },
+    {   "accuracy_file": "accuracy_file_race.txt",
+        "accuracy_file_results": "accuracy_file_result_race.txt",
+        "meta_results_dir": "/Data/results/race/",
+        "cross_val_data_dir": "/Data/cross_validation_data/race/",
+        "variable": "race",
+        "val_neg": "Black",
+        "val_pos": "White" 
+    },
+    {   "accuracy_file": "accuracy_file_ER_status.txt",
+        "accuracy_file_results": "accuracy_file_result_ER_status.txt",
+        "meta_results_dir": "/Data/results/ER_status/",
+        "cross_val_data_dir": "/Data/cross_validation_data/ER_status/",
+        "variable": "ER_status",
+        "val_neg": "negative",
+        "val_pos": "positive"    
+    },
+    {   "accuracy_file": "accuracy_file_PR_status.txt",
+        "accuracy_file_results": "accuracy_file_result_PR_status.txt",
+        "meta_results_dir": "/Data/results/PR_status/",
+        "cross_val_data_dir": "/Data/cross_validation_data/PR_status/",
+        "variable": "PR_status",
+        "val_neg": "negative",
+        "val_pos": "positive"
+    },
     {   "accuracy_file": "accuracy_file_HER2_status.txt",
         "accuracy_file_results": "accuracy_file_result_HER2_status.txt",
         "meta_results_dir": "/Data/results/HER2_status/",

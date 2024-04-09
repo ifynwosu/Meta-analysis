@@ -15,7 +15,6 @@ docker build -t inwosu/metaanalysis_02 .
 dockerCommand="docker run -i -t --rm \
     -u $(id -u):$(id -g) \
     -v $(pwd):/2_metaanalysis \
-    -v $(pwd)/../1_prepare_data:/prepare_data \
     -v $(pwd)/../Data:/Data \
     inwosu/metaanalysis_02"
 

@@ -6,8 +6,8 @@ library(DExMA)
 library(pheatmap)
 library(RColorBrewer)
 
-source("/prepare_data/functions/draw_Heatmap.R")
+source("functions/draw_Heatmap.R")
 source("scripts/metaanalysis.R")
 
 warnings()
-# sessionInfo()
+sessionInfo()

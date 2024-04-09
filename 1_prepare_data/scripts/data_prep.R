@@ -10,4 +10,4 @@ source("scripts/variable_standardization.R")
 source("scripts/select_files.R")
 source("scripts/scale_data.R")
 
-warnings()
+# warnings()

@@ -1,5 +1,5 @@
 
-# Define the file path to the standardized metadata directory
+# Define the file path to store the standardized metadata directory
 metadata_dir <- "/Data/analysis_ready_metadata/"
 
 # Create the metadata folder if it doesn't exist

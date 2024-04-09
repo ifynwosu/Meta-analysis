@@ -1,5 +1,4 @@
 
-
 # create relevant directories
 
 create_directory <- function(directory_path) {
@@ -24,11 +23,10 @@ HER2_expression_data_path <- create_directory("/Data/expression_data/HER2_status
 triple_neg_metadata_path <- create_directory("/Data/metadata/tri_neg_status/")
 triple_neg_expr_data_path <- create_directory("/Data/expression_data/tri_neg_status/")
 
-
 # directory where expression data is stored
 expr_dir <- "/Data/prelim_expression_data/"
 
-# directory where clean metadata will be stored
+# directory where clean metadata is stored
 metadata_dir <- "/Data/analysis_ready_metadata/"
 meta_dir_paths <- list.files(metadata_dir, full.names = T)
 
@@ -36,8 +34,6 @@ race_data <- tibble()
 er_data <- tibble()
 pr_data <- tibble()
 her2_data <- tibble()
-
-
 
 for (i in seq_along(meta_dir_paths)) {
 
