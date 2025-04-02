@@ -6,19 +6,19 @@ if not os.path.exists(result_dir):
     os.mkdir(result_dir)
 
 # number of genes to use in cross validation
-# num_genes = [5, 10, 20]                           # values to use when testing
+# num_genes = [5, 10, 20]                           # values to use when testing to reduce run time
 num_genes = [5, 10, 20, 50, 100, 200, 500, 1000]
 
 # number of cross validation runs
-# num_cv_runs = 20                                  # values to use when testing
+# num_cv_runs = 50                                  # values to use when testing
 num_cv_runs = 100
 
 # define methods
-kfold = StratifiedKFold(n_splits = 5) # test diff values 
+kfold = StratifiedKFold(n_splits = 5)
 cv_method = kfold  
 
 # create model
-model = RandomForestClassifier(n_estimators = 100, random_state = 1) # look at the default parameters
+model = RandomForestClassifier(n_estimators = 100, random_state = 1) 
 
 def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, cross_val_data_dir, variable, val_neg, val_pos):
     accuracy_file_path = os.path.join(result_dir, accuracy_file)
@@ -47,8 +47,6 @@ def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, c
 
             # read in gene expression data
             cross_val_path_name = os.path.join(cross_val_data_dir, dataset_id)
-            print(cross_val_path_name)
-            # sys.exit()
             cross_val_df = pd.read_table(cross_val_path_name, sep='\t')
 
             # split matrix using only top "n" genes from meta results
@@ -57,7 +55,7 @@ def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, c
             gene_names = X.keys()
 
             # evaluate model
-            scores = cross_val_score(model, X, y, scoring='balanced_accuracy', cv=cv_method) #roc_auc (alternate scoring method)
+            scores = cross_val_score(model, X, y, scoring='balanced_accuracy', cv=cv_method)
             meta_mean_score = scores.mean()
             meta_std_dev = scores.std()
 
@@ -94,7 +92,7 @@ def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, c
                 total_scores.append(random_mean_score)
 
                 # report performance
-                print(dataset_id, variable, " number of genes:" , num, " iteration:", i, ' Random genes accuracy: %.3f (%.3f)' % (random_mean_score, random_std_dev))                   
+                print(dataset_id, variable, " number of genes:", num, " iteration:", i, ' Random genes accuracy: %.3f (%.3f)' % (random_mean_score, random_std_dev))                   
 
                 random_gene_names = X_random.keys()
                 random_accuracy_value = 'Random genes accuracy: %.3f (%.3f)' % (random_mean_score, random_std_dev)
@@ -106,7 +104,7 @@ def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, c
                 results_file.append({'Dataset_ID': dataset_id, 'num_genes': num, 'mean_score': random_mean_score})
 
             mean_total_score.append(total_scores)
-            accuracy_file_results.writelines(dataset_id + "\t" + str(num) + "\t" + "Meta genes" + "\t" + str(meta_mean_score) + "\n")
+            accuracy_file_results.writelines(dataset_id + "\t" + str(num) + "\t" + "Meta-analysis genes" + "\t" + str(meta_mean_score) + "\n")
             accuracy_file_results.writelines(dataset_id + "\t" + str(num) + "\t" + "Random genes" + "\t" + str(mean(mean_total_score)) + "\n")
 
         # Create a DataFrame to store the mean scores
@@ -119,18 +117,10 @@ def calculate_accuracy(accuracy_file, accuracy_file_results, meta_results_dir, c
 
 
 # Define the parameters for each call
-calls = [
-    {   "accuracy_file": "accuracy_file_race.txt",
-        "accuracy_file_results": "accuracy_file_result_race.txt",
-        "meta_results_dir": "/Data/results/race/",
-        "cross_val_data_dir": "/Data/cross_validation_data/race/",
-        "variable": "race",
-        "val_neg": "Black",
-        "val_pos": "White" 
-    },
+calls = [    
     {   "accuracy_file": "accuracy_file_ER_status.txt",
         "accuracy_file_results": "accuracy_file_result_ER_status.txt",
-        "meta_results_dir": "/Data/results/ER_status/",
+        "meta_results_dir": "/Data/metaanalysis_results/ER_status/",
         "cross_val_data_dir": "/Data/cross_validation_data/ER_status/",
         "variable": "ER_status",
         "val_neg": "negative",
@@ -138,7 +128,7 @@ calls = [
     },
     {   "accuracy_file": "accuracy_file_PR_status.txt",
         "accuracy_file_results": "accuracy_file_result_PR_status.txt",
-        "meta_results_dir": "/Data/results/PR_status/",
+        "meta_results_dir": "/Data/metaanalysis_results/PR_status/",
         "cross_val_data_dir": "/Data/cross_validation_data/PR_status/",
         "variable": "PR_status",
         "val_neg": "negative",
@@ -146,19 +136,35 @@ calls = [
     },
     {   "accuracy_file": "accuracy_file_HER2_status.txt",
         "accuracy_file_results": "accuracy_file_result_HER2_status.txt",
-        "meta_results_dir": "/Data/results/HER2_status/",
+        "meta_results_dir": "/Data/metaanalysis_results/HER2_status/",
         "cross_val_data_dir": "/Data/cross_validation_data/HER2_status/",
         "variable": "HER2_status",
         "val_neg": "negative",
         "val_pos": "positive"
     },
+    {   "accuracy_file": "accuracy_file_race.txt",
+        "accuracy_file_results": "accuracy_file_result_race.txt",
+        "meta_results_dir": "/Data/metaanalysis_results/race/",
+        "cross_val_data_dir": "/Data/cross_validation_data/race/",
+        "variable": "race",
+        "val_neg": "Black",
+        "val_pos": "White" 
+    },
     {   "accuracy_file": "accuracy_file_tri_neg_status.txt",
         "accuracy_file_results": "accuracy_file_result_tri_neg_status.txt",
-        "meta_results_dir": "/Data/results/tri_neg_status/",
+        "meta_results_dir": "/Data/metaanalysis_results/tri_neg_status/",
         "cross_val_data_dir": "/Data/cross_validation_data/tri_neg_status/",
         "variable": "tri_neg_status",
         "val_neg": "tri_neg",
         "val_pos": "non_tri_neg"
+    },    
+    {   "accuracy_file": "accuracy_file_race_tri_neg.txt",
+        "accuracy_file_results": "accuracy_file_result_race_tri_neg.txt",
+        "meta_results_dir": "/Data/metaanalysis_results/race_tri_neg/",
+        "cross_val_data_dir": "/Data/cross_validation_data/race_tri_neg/",
+        "variable": "race",
+        "val_neg": "Black",
+        "val_pos": "White"    
     }    
 ]
 

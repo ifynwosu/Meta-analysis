@@ -17,9 +17,10 @@ data_ER <- create_directory("/Data/cross_validation_data/ER_status")
 data_PR <- create_directory("/Data/cross_validation_data/PR_status")
 data_HER2 <- create_directory("/Data/cross_validation_data/HER2_status")
 data_trip_neg <- create_directory("/Data/cross_validation_data/tri_neg_status")
+data_race_trip_neg <- create_directory("/Data/cross_validation_data/race_tri_neg")
 
-meta <- "/Data/metadata/"
-expr <- "/Data/expression_data/"
+meta <- "/Data/analysis_ready_metadata/"
+expr <- "/Data/analysis_ready_expression_data/"
 
 prepare_data <- function(path, variable, filter_variable, filter_values) {
 
@@ -58,21 +59,17 @@ prepare_data <- function(path, variable, filter_variable, filter_values) {
         expr_data <- read_tsv(expr_file) 
 
         transposed_data <- expr_data |> 
-            dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Chromosome", "Ensembl_Gene_ID", "Gene_Biotype")) |>
             distinct(HGNC_Symbol, .keep_all = TRUE) |>
-            t() |>
-            as_tibble(rownames = NA) |> 
-            rownames_to_column()
-
-        renamed_data <- row_to_names(transposed_data, 1, remove_row = TRUE, remove_rows_above = TRUE) |>
-            rename(Sample_ID = HGNC_Symbol) |>
+            pivot_longer(cols= -1) |>
+            pivot_wider(names_from = HGNC_Symbol, values_from = value) |>
+            rename(Sample_ID = name) |>
             dplyr::select(Sample_ID, all_of(common_genes))
 
-        joined_data <- inner_join(identifiers, renamed_data) |>
+        joined_data <- inner_join(identifiers, transposed_data) |>
             dplyr::select(-Sample_ID) |>
             filter({{filter_variable}} %in% filter_values) |>
             filter(!is.na({{filter_variable}})) |>
-            mutate(across(where(is.numeric), scale))
+            mutate(across(where(is.numeric), ~ as.numeric(scale(.x)))) # https://stackoverflow.com/questions/70377294/why-does-mutateacross-with-scale-add-1-to-the-column-header
         
         cat("\n")
         print(paste0("writing ",  filename, " to file"))
@@ -84,7 +81,6 @@ prepare_data <- function(path, variable, filter_variable, filter_values) {
             group_by({{filter_variable}}) |>
             tally()
 
-        
         data_tally[[i]] <- num_par
         names(data_tally)[i] <- filename
     }
@@ -99,3 +95,4 @@ prepare_data(data_ER, "ER_status", ER_status, c("positive", "negative"))
 prepare_data(data_PR, "PR_status", PR_status, c("positive", "negative"))
 prepare_data(data_HER2, "HER2_status", HER2_status, c("positive", "negative"))
 prepare_data(data_trip_neg, "tri_neg_status", tri_neg_status, c("tri_neg", "non_tri_neg"))
+prepare_data(data_race_trip_neg, "race_tri_neg", race, c("Black", "White"))

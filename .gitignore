@@ -2,9 +2,8 @@
 Data/
 old_data/
 python_env/
-test_data/
 .Rhistory
-
+3_cross_validation/scripts/__pycache__/
 
 #git add .
 #git add file/folder

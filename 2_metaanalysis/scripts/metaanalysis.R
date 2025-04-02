@@ -14,11 +14,11 @@ create_directory <- function(directory_path) {
 
 results_dir <- "/Data/metaanalysis_results/"
 
-meta <- "/Data/metadata/"
-expr <- "/Data/expression_data/"
+meta <- "/Data/analysis_ready_metadata/"
+expr <- "/Data/analysis_ready_expression_data/"
 
-# run_meta("race", race, "Black", "White")
-run_meta <- function(variable, filter_variable, value_a, value_b) {
+# run_meta("race_tri_neg", "race", race, "Black", "White")
+run_meta <- function(variable, pheno_group, filter_variable, value_a, value_b) {
 
     meta_results_dir <- create_directory(paste0(results_dir, variable))
 
@@ -67,7 +67,7 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
             names(meta_list)[j] <- unique(meta_list[[j]][["Dataset_ID"]])
         
             expr_data <-read_tsv(file = expr_dir_paths[combinations[,i][j]]) |>
-                dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Chromosome", "Ensembl_Gene_ID", "Gene_Biotype")) |>
+                #dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Chromosome", "Ensembl_Gene_ID", "Gene_Biotype")) |>
                 distinct(HGNC_Symbol, .keep_all = TRUE) |>
                 inner_join(common_genes) |>
                 column_to_rownames(var = "HGNC_Symbol") |>
@@ -79,16 +79,15 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
         list_all_metadata[[i]] <- meta_list
         list_all_exprdata[[i]] <- expr_list
     }
-
+   
     # vector with names of all data sets
     patterns <- setNames("", paste0(expr_dir, "/")) 
     dataset_vector = str_replace_all(expr_dir_paths, c(patterns, ".tsv.gz" = ""))
     
     # create vectors for phenotype data
-    phenoGroups = rep(variable, length(combinations[,1]))
+    phenoGroups = rep(pheno_group, length(combinations[,1]))    
     phenoCases = rep(list(value_a), length(combinations[,1]))
     phenoControls = rep(list(value_b), length(combinations[,1]))
-    
     
     # create vector to store results from meta-analysis
     meta_analysis_genes <- list()
@@ -129,7 +128,7 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
         names(meta_list)[i] <- metadata[["Dataset_ID"]][[1]]
 
         expr_data <- read_tsv(file = expr_dir_paths[i]) |>
-            dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Chromosome", "Ensembl_Gene_ID", "Gene_Biotype")) |>
+            #dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Ensembl_Gene_ID", "Chromosome", , "Gene_Biotype")) |>
             distinct(HGNC_Symbol, .keep_all = TRUE) |>
             column_to_rownames(var = "HGNC_Symbol") |>
             as.matrix()
@@ -137,7 +136,7 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
         names(expr_list)[i] <- metadata[["Dataset_ID"]][[1]]
     }
 
-    phenoGroups = rep(variable, length(meta_dir_paths))
+    phenoGroups = rep(pheno_group, length(meta_dir_paths))    
     phenoCases = rep(list(value_a), length(meta_dir_paths))
     phenoControls = rep(list(value_b), length(meta_dir_paths))
 
@@ -157,13 +156,12 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
     write_tsv(output_df, file.path(paste0(results_dir, variable, "_full_meta_results.tsv")))
 
     new_full_results <- output_df |>
-        filter(FDR < 0.05) |>
-        arrange(desc(abs(Com.ES))) 
+        filter(FDR < 0.05)  
 
     write_tsv(new_full_results, file.path(paste0(results_dir, variable, "_filtered_meta_results.tsv")))
 
     # draw heatmap
-    png(paste0(results_dir, variable, "__heatmap.png"), width = 24, height = 12, units = "in", res = 300)
+    png(paste0(results_dir, variable, "_heatmap.png"), width = 24, height = 12, units = "in", res = 300)
     heatmap_values <- draw_Heatmap(objectMA = full_meta_object,
                                 resMA = full_meta_results,
                                 typeMethod = "REM",
@@ -177,15 +175,10 @@ run_meta <- function(variable, filter_variable, value_a, value_b) {
     dev.off()  
 }
 
-# function(variable, filter_variable, value_a, value_b)
-run_meta("race", race, "Black", "White")
-run_meta("ER_status", ER_status, "positive", "negative")
-run_meta("PR_status", PR_status, "positive", "negative")
-run_meta("HER2_status", HER2_status, "positive", "negative")
-run_meta("tri_neg_status", tri_neg_status, "tri_neg", "non_tri_neg")
-
-# warning
-# Zero sample variances detected have been offset away from zero
-
-# total time 304m26.552s
-# tri neg 47m12.754s
+# function(variable, pheno_group, filter_variable, value_a, value_b)
+run_meta("race", "race", race, "Black", "White")
+run_meta("ER_status", "ER_status", ER_status, "positive", "negative")
+run_meta("PR_status", "PR_status", PR_status, "positive", "negative")
+run_meta("HER2_status", "HER2_status", HER2_status, "positive", "negative")
+run_meta("tri_neg_status", "tri_neg_status", tri_neg_status, "non_tri_neg", "tri_neg")
+run_meta("race_tri_neg", "race", race, "Black", "White")

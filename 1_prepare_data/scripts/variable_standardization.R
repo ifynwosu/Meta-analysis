@@ -1,14 +1,14 @@
+# path where preliminary metadata is stored
+prelim_metadata_dir <- "/Data/prelim_metadata"
+meta_dir_paths <- list.files(prelim_metadata_dir, full.names = T)
 
 # Define the file path to store the standardized metadata directory
-metadata_dir <- "/Data/analysis_ready_metadata/"
+metadata_dir <- "/Data/temp_metadata/"
 
 # Create the metadata folder if it doesn't exist
 if (!dir.exists(metadata_dir)) {
     dir.create(metadata_dir, recursive = TRUE)
 }
-
-prelim_metadata_dir <- "/Data/prelim_metadata"
-meta_dir_paths <- list.files(prelim_metadata_dir, full.names = T)
 
 for (i in seq_along(meta_dir_paths)) {
     file = meta_dir_paths[i]

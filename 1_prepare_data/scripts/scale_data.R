@@ -1,6 +1,7 @@
 
+# path where preliminary metadata is stored
 expression_data <- "/Data/prelim_expression_data"
-output_dir <- "/Data/analysis_ready_expression_data/"
+output_dir <- "/Data/temp_expression_data/"
 
 create_directory <- function(directory_path) {
     if (!dir.exists(directory_path)) {
@@ -43,16 +44,17 @@ for (file in file_paths) {
     print(paste0("Reading in ", file, "!"))
     cat("\n")
     
-    expr_data <- read_tsv(file) %>%
-        dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Chromosome", "HGNC_Symbol", "Gene_Biotype")) |>
+    expr_data <- read_tsv(file) |>
+        dplyr::select(-c("Dataset_ID", "Entrez_Gene_ID", "Ensembl_Gene_ID", "Chromosome", "Gene_Biotype")) |>
+        distinct(HGNC_Symbol, .keep_all = TRUE) |>
         # dplyr::filter(!(if_all(everything(), ~. == 0))) |> #remove rows with all 0
-        column_to_rownames(var = "Ensembl_Gene_ID") 
+        column_to_rownames(var = "HGNC_Symbol") 
     
-    threshold <- 0
-    index <- rowSums(expr_data > threshold) 
-    expr_data <- expr_data[index,]
-
-    # expr_data <- expr_data[rowSums(expr_data[]) != 0, ]
+    #remove rows with all 0
+    # threshold <- 0
+    # index <- which(rowSums(expr_data > threshold) !=0)
+    # expr_data <- expr_data[index,]
+    expr_data <- expr_data[rowSums(expr_data[]) != 0, ] #remove rows with all 0
     
     ID <- basename(file)
     ID <- gsub(".tsv.gz", "", ID)
@@ -66,8 +68,7 @@ for (file in file_paths) {
     }   
 
     gene_df <- gene_df |>
-        rownames_to_column(var = "Ensembl_Gene_ID")
+        rownames_to_column(var = "HGNC_Symbol")
 
-    write_tsv(gene_df, file.path(paste0(output_dir, ID, ".tsv.gz")))
-    
+    write_tsv(gene_df, file.path(paste0(output_dir, ID, ".tsv.gz")))    
 }

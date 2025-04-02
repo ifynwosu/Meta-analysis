@@ -1,10 +1,10 @@
-FROM python:3.12
+FROM python:3.13
 
 #install required packages
-RUN pip install scikit-learn==1.3.1
-RUN pip install pandas==2.2.1
+RUN pip install scikit-learn==1.6.1
+RUN pip install pandas==2.2.3
 
-FROM bioconductor/bioconductor_docker:RELEASE_3_18
+FROM bioconductor/bioconductor_docker:RELEASE_3_20
 
 #install required packages
 RUN R -e 'BiocManager::install(c("tidyverse", "tools", "janitor"), force = TRUE)'
